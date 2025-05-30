@@ -5,6 +5,14 @@ const usersignup = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
+        // ✅ Validate input cơ bản
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Name, Email and Password are required' });
+        }
+
+        // 🔍 Debug đầu vào
+        console.log("Signup payload:", req.body);
+
         const checkUser = await session.run(
             'MATCH (u:User {email: $email}) RETURN u',
             { email }
@@ -16,9 +24,8 @@ const usersignup = async (req, res) => {
 
         const bcrypt = await import('bcryptjs');
         const hashPassword = await bcrypt.default.hash(password, 10);
-        
-        // Generate unique ID
-        const id = Date.now().toString();
+
+        const id = Date.now().toString(); // tạm thời là timestamp
 
         const createUser = await session.run(
             `CREATE (u:User {
@@ -45,7 +52,7 @@ const usersignup = async (req, res) => {
                 dob: req.body.dob || "01-01-2000",
                 phone: req.body.phone || "1234567890",
                 role: req.body.role || "Book Reader",
-                books: req.body.books || "0"
+                books: req.body.books || 0  // ❗ Nên dùng số
             }
         );
 
@@ -67,7 +74,8 @@ const usersignup = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Signup error:", error); // ❗ Log lỗi
+        res.status(500).json({ message: error.message || "Something went wrong during signup" });
     } finally {
         await session.close();
     }
