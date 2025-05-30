@@ -12,8 +12,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ✅ Cấu hình CORS: thêm domain frontend đã deploy
 app.use(cors({
-    origin: ["http://localhost:3000", "http://localhost:5173"],
+    origin: [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://bookstoreudpt.vercel.app"  // ← thêm domain Vercel
+    ],
     methods: ["POST", "GET", "PUT", "DELETE"],
     credentials: true
 }));
@@ -31,6 +36,3 @@ app.use('/', router);
 app.get('/', (req, res) => {
     res.status(200).json({ message: "BookStore backend is running!" });
 });
-
-// ❌ KHÔNG gọi DbConnect() nữa!
-// vì dbconnection.js đã kết nối sẵn rồi khi import
