@@ -1,11 +1,7 @@
 import express from 'express';
-import neo4j from 'neo4j-driver';
+import driver from '../Database/dbconnection.js';
 
 const router = express.Router();
-const driver = neo4j.driver(
-    'bolt://localhost:7687',
-    neo4j.auth.basic('neo4j', 'thang044')
-);
 
 const searchBook = async (req, res) => {
     const session = driver.session();
@@ -21,22 +17,32 @@ const searchBook = async (req, res) => {
 
         if (query.startsWith('category:')) {
             param = query.replace('category:', '').trim();
-            cypherQuery = `MATCH (b:Book)
-                           WHERE toLower(b.category) CONTAINS toLower($param)
-                           RETURN b`;
+            cypherQuery = `
+                MATCH (b:Book)-[:BELONGS_TO]->(c:Category)
+                WHERE toLower(c.name) CONTAINS toLower($param)
+                RETURN b
+            `;
         } else if (query.startsWith('author:')) {
             param = query.replace('author:', '').trim();
-            cypherQuery = `MATCH (b:Book)
-                           WHERE toLower(b.author) CONTAINS toLower($param)
-                           RETURN b`;
+            cypherQuery = `
+                MATCH (b:Book)-[:WRITTEN_BY]->(a:Author)
+                WHERE toLower(a.name) CONTAINS toLower($param)
+                RETURN b
+            `;
         } else {
             param = query;
-            cypherQuery = `MATCH (b:Book)
-                           WHERE toLower(b.name) CONTAINS toLower($param)
-                           OR toLower(b.title) CONTAINS toLower($param)
-                           OR toLower(b.category) CONTAINS toLower($param)
-                           OR toLower(b.author) CONTAINS toLower($param)
-                           RETURN b`;
+            cypherQuery = `
+                MATCH (b:Book)
+                OPTIONAL MATCH (b)-[:WRITTEN_BY]->(a:Author)
+                OPTIONAL MATCH (b)-[:BELONGS_TO]->(c:Category)
+                WHERE toLower(b.name) CONTAINS toLower($param)
+                   OR toLower(b.title) CONTAINS toLower($param)
+                   OR toLower(b.category) CONTAINS toLower($param)
+                   OR toLower(b.author) CONTAINS toLower($param)
+                   OR toLower(a.name) CONTAINS toLower($param)
+                   OR toLower(c.name) CONTAINS toLower($param)
+                RETURN b
+            `;
         }
 
         const result = await session.run(cypherQuery, { param });
