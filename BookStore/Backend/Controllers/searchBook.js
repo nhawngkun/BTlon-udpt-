@@ -22,12 +22,13 @@ const searchBook = async (req, res) => {
         let result = await session.run(cypherQuery, { param });
         let books = result.records.map(record => record.get('b').properties);
 
-        // 2. Nếu không có sách theo thể loại, tìm theo tên sách hoặc tác giả
+        // 2. Nếu không có sách theo thể loại, tìm theo tên sách, tiêu đề hoặc tác giả
         if (books.length === 0) {
             cypherQuery = `
                 MATCH (b:Book)
                 OPTIONAL MATCH (b)-[:WRITTEN_BY]->(a:Author)
                 WHERE toLower(b.name) CONTAINS $param
+                   OR toLower(b.title) CONTAINS $param
                    OR (a.name IS NOT NULL AND toLower(a.name) CONTAINS $param)
                 RETURN DISTINCT b
             `;
