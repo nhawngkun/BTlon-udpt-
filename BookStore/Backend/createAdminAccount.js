@@ -4,9 +4,9 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: "./config/config.env" });
 
-const uri = process.env.NEO4J_URI || 'bolt://localhost:7690';
+const uri = process.env.NEO4J_URI || 'neo4j+s://58270351.databases.neo4j.io';
 const username = process.env.NEO4J_USER || 'neo4j';
-const password = process.env.NEO4J_PASSWORD || 'thang044';
+const password = process.env.NEO4J_PASSWORD || 'UlXPYheImRAqEPXhXehOLc89qRc9AKM6us2x2VJHgkY';
 
 console.log("Connecting to Neo4j at:", uri);
 
