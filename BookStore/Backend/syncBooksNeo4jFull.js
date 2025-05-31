@@ -1,11 +1,11 @@
 import neo4j from 'neo4j-driver';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config({ path: './Config/config.env' }); // Đảm bảo đúng đường dẫn
 
 const driver = neo4j.driver(
-  'neo4j+s://58270351.databases.neo4j.io',
-  neo4j.auth.basic('neo4j', process.env.NEO4J_PASSWORD || 'UlXPYheImRAqEPXhXehOLc89qRc9AKM6us2x2VJHgkY')
+  process.env.NEO4J_URI,
+  neo4j.auth.basic(process.env.NEO4J_USERNAME, process.env.NEO4J_PASSWORD)
 );
 
 const session = driver.session();
