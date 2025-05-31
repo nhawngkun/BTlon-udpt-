@@ -119,12 +119,22 @@ export const runSeedBooks = (req, res) => {
 
 // API chạy syncBooksNeo4jFull.js để đồng bộ từ file sampleBooks.js lên Neo4j
 export const syncBooksNeo4j = (req, res) => {
-  exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
-    if (err) {
-      console.error('Error running syncBooksNeo4jFull.js:', err);
-      return res.status(500).json({ message: 'Sync failed', error: err.message });
-    }
-    console.log('syncBooksNeo4jFull.js output:', stdout);
-    res.status(200).json({ message: 'Sync completed', output: stdout });
-  });
+  // Thêm độ trễ 10 giây trước khi chạy syncBooksNeo4jFull.js
+  console.log('Waiting 10 seconds before running syncBooksNeo4jFull.js...');
+  
+  setTimeout(() => {
+    console.log('Starting syncBooksNeo4jFull.js after delay...');
+    
+    exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+      if (err) {
+        console.error('Error running syncBooksNeo4jFull.js:', err);
+        return res.status(500).json({ message: 'Sync failed', error: err.message });
+      }
+      console.log('syncBooksNeo4jFull.js output:', stdout);
+      res.status(200).json({ 
+        message: 'Sync completed after waiting 10 seconds', 
+        output: stdout 
+      });
+    });
+  }, 10000); // Đợi 10 giây (10000 ms)
 };

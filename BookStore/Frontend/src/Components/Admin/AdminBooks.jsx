@@ -65,45 +65,26 @@ const AdminBooks = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => { // Tạo URL tạm thời, không phù hợp để lưu vào DB
+        // Lưu base64 vào formData để gửi lên server
+        setFormData(prev => ({
+          ...prev,
+          image: reader.result
+        }));
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
       setSelectedImage(file);
-      setImagePreview(URL.createObjectURL(file));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let imageUrl = formData.image;
-
-      // Xử lý upload ảnh nếu có file được chọn
-      if (selectedImage) {
-        // Tạo đối tượng FormData để upload file
-        const imageData = new FormData();
-        imageData.append('image', selectedImage);
-        
-        try {
-          // Giả lập upload ảnh - trong thực tế sẽ gửi đến API upload
-          // Ví dụ: const res = await axios.post(`${API_URL}/upload-image`, imageData);
-          // imageUrl = res.data.url;
-          
-          // Tạm thời dùng local URL cho demo
-          imageUrl = imagePreview;
-          
-          toast.success('Tải ảnh lên thành công');
-        } catch (uploadError) {
-          console.error('Error uploading image:', uploadError);
-          toast.error('Lỗi khi tải ảnh lên');
-          return;
-        }
-      }
-
-      // Cập nhật dữ liệu với URL ảnh mới
-      const updatedData = {
-        ...formData,
-        image: imageUrl
-      };
-
-      // Thêm/cập nhật sách
+      // formData.image đã chứa base64 hoặc URL trực tiếp
+      const updatedData = { ...formData };
+      
       if (isEditing) {
         await axios.put(`${API_URL}/book/edit/${formData.id}`, updatedData);
         toast.success('Cập nhật sách thành công');
