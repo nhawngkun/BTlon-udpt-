@@ -91,4 +91,5 @@ const addBook = async (req, res) => {
     }
 }
 
+// Đã đảm bảo: khi thêm sách sẽ tự động nối với tác giả và thể loại (Author, Category) và tạo quan hệ
 export default addBook
