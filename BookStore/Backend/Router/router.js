@@ -11,7 +11,7 @@ import addBook from '../Controllers/addBook.js';
 import getBook from '../Controllers/getBook.js';
 import readBook from '../Controllers/readBook.js';
 import searchBook from '../Controllers/searchBook.js';
-import { getAllUsers, getStats, deleteUser } from '../Controllers/adminControllers.js';
+import { getAllUsers, getStats, deleteUser, syncBooksNeo4j } from '../Controllers/adminControllers.js';
 import authMiddleware from '../Middleware/authMiddleware.js';
 
 
@@ -41,6 +41,7 @@ router.get('/books/search', searchBook)
 router.get('/admin/users', getAllUsers);
 router.get('/admin/stats', getStats);
 router.delete('/admin/users/:id', deleteUser);
+router.post('/admin/sync-books', syncBooksNeo4j);
 
 // Other routes
 // router.post('/sendmail', sendmail);

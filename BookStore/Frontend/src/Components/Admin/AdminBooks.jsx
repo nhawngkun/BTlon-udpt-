@@ -23,6 +23,8 @@ const AdminBooks = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [pendingData, setPendingData] = useState(null);
 
   useEffect(() => {
     fetchBooks();
@@ -70,8 +72,14 @@ const AdminBooks = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPendingData({ ...formData, image: selectedImage ? imagePreview : formData.image });
+    setShowConfirm(true);
+  };
+
+  const handleConfirmAdd = async () => {
+    setShowConfirm(false);
     try {
-      let imageUrl = formData.image;
+      let imageUrl = pendingData.image;
 
       // Xử lý upload ảnh nếu có file được chọn
       if (selectedImage) {
@@ -97,24 +105,34 @@ const AdminBooks = () => {
 
       // Cập nhật dữ liệu với URL ảnh mới
       const updatedData = {
-        ...formData,
+        ...pendingData,
         image: imageUrl
       };
 
+      // Gửi request thêm sách
       if (isEditing) {
-        await axios.put(`${API_URL}/book/edit/${formData.id}`, updatedData);
+        await axios.put(`${API_URL}/book/edit/${pendingData.id}`, updatedData);
         toast.success('Cập nhật sách thành công');
       } else {
         await axios.post(`${API_URL}/book/add`, updatedData);
         toast.success('Thêm sách mới thành công');
       }
-      
+
+      // Gọi API backend để chạy syncBooksNeo4jFull.js
+      await axios.post(`${API_URL}/admin/sync-books`);
+      toast.success('Đồng bộ dữ liệu thành công');
+
       fetchBooks();
       resetForm();
     } catch (error) {
       console.error('Error saving book:', error);
       toast.error('Lỗi khi lưu sách');
     }
+  };
+
+  const handleCancelAdd = () => {
+    setShowConfirm(false);
+    setPendingData(null);
   };
 
   const handleDelete = async (id) => {
@@ -345,6 +363,30 @@ const AdminBooks = () => {
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* Modal xác nhận */}
+      {showConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 w-80 text-center">
+            <h2 className="text-xl font-bold mb-4">Xác nhận thêm sách</h2>
+            <p>Bạn có chắc chắn muốn thêm sách này không?</p>
+            <div className="flex justify-center gap-4 mt-6">
+              <button
+                onClick={handleCancelAdd}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Không
+              </button>
+              <button
+                onClick={handleConfirmAdd}
+                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
+              >
+                Có
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

@@ -1,4 +1,5 @@
 import driver from '../Database/dbconnection.js';
+import { exec } from 'child_process';
 
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
@@ -102,4 +103,16 @@ export const deleteUser = async (req, res) => {
   } finally {
     await session.close();
   }
+};
+
+// API đồng bộ lại Neo4j từ sampleBooks.js
+export const syncBooksNeo4j = (req, res) => {
+  exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+    if (err) {
+      console.error('Error running syncBooksNeo4jFull.js:', err);
+      return res.status(500).json({ message: 'Sync failed', error: err.message });
+    }
+    console.log('syncBooksNeo4jFull.js output:', stdout);
+    res.status(200).json({ message: 'Sync completed', output: stdout });
+  });
 };
