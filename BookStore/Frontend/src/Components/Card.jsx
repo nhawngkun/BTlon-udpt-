@@ -45,9 +45,6 @@ const Card = ({ item }) => {
               alt="Books" />
           </figure>
           <div className="card-body">
-          {admin &&
-                <p className="text-sm text-pink-500">id: {item.id}</p> // Changed from item._id to item.id
-                }
             <h2 className="card-title">
               {item.name}
               <div className="badge badge-secondary">{item.category}</div>
