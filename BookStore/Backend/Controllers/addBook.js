@@ -77,7 +77,6 @@ const addBook = async (req, res) => {
             data: book 
         })
     } catch (error) {
-        // Rollback transaction nếu có lỗi
         await transaction.rollback();
         
         console.error("Error adding book to Neo4j:", error);
