@@ -106,11 +106,12 @@ const AdminBooks = () => {
           setShowSyncConfirm(true);
         } catch (syncError) {
           console.error("Error during sync process:", syncError);
-          toast.error("Đã thêm sách nhưng có lỗi khi đồng bộ với Neo4j");
+          // Không hiển thị thông báo lỗi
         }
       }
     } catch (error) {
       console.error('Error saving book:', error);
+      // Không hiển thị thông báo lỗi
     } finally {
       setLoading(false);
     }
@@ -127,7 +128,7 @@ const AdminBooks = () => {
       fetchBooks();
     } catch (error) {
       console.error('Error deleting book:', error);
-      toast.error('Lỗi khi xóa sách');
+      // Không hiển thị thông báo lỗi
     }
   };
 
@@ -179,7 +180,7 @@ const AdminBooks = () => {
       resetForm();
     } catch (error) {
       console.error('Error syncing books:', error);
-      toast.error('Lỗi khi đồng bộ dữ liệu: ' + (error.response?.data?.message || error.message));
+      // Không hiển thị thông báo lỗi
     } finally {
       setLoading(false);
     }
