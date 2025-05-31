@@ -82,6 +82,7 @@ const AdminBooks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       // formData.image đã chứa base64 hoặc URL trực tiếp
       const updatedData = { ...formData };
       
@@ -91,18 +92,28 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
-        await axios.post(`${API_URL}/book/add`, updatedData);
+        // Thêm sách mới
+        const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
         toast.success('Thêm sách mới thành công');
+        console.log("Book added response:", addResponse.data);
         
-        // Sau khi thêm sách thành công, gọi API cập nhật sampleBooks.js
-        await axios.post(`${API_URL}/admin/seed-books`);
-        
-        // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
-        setShowSyncConfirm(true);
+        try {
+          // Cập nhật file sampleBooks.js
+          const seedResponse = await axios.post(`${API_URL}/admin/seed-books`);
+          console.log("Seed response:", seedResponse.data);
+          
+          // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
+          setShowSyncConfirm(true);
+        } catch (syncError) {
+          console.error("Error during sync process:", syncError);
+          toast.error("Đã thêm sách nhưng có lỗi khi đồng bộ với Neo4j");
+        }
       }
     } catch (error) {
       console.error('Error saving book:', error);
-      toast.error('Lỗi khi lưu sách');
+      toast.error('Lỗi khi lưu sách: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -160,13 +171,18 @@ const AdminBooks = () => {
 
   const handleSyncConfirm = async () => {
     setShowSyncConfirm(false);
+    setLoading(true);
     try {
-      await axios.post(`${API_URL}/admin/sync-books`);
+      const syncResponse = await axios.post(`${API_URL}/admin/sync-books`);
+      console.log("Sync response:", syncResponse.data);
       toast.success('Đồng bộ dữ liệu thành công');
       fetchBooks();
+      resetForm();
     } catch (error) {
       console.error('Error syncing books:', error);
-      toast.error('Lỗi khi đồng bộ dữ liệu');
+      toast.error('Lỗi khi đồng bộ dữ liệu: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
     }
   };
 
