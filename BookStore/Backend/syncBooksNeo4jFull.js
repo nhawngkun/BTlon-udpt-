@@ -14,7 +14,7 @@ const driver = neo4j.driver(
     process.env.NEO4J_PASSWORD || 'UlXPYheImRAqEPXhXehOLc89qRc9AKM6us2x2VJHgkY'
   )
 );
-
+//
 const session = driver.session();
 
 async function syncBooksWithAuthors() {
