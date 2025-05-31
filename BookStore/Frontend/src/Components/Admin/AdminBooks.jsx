@@ -105,12 +105,12 @@ const AdminBooks = () => {
           // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
           setShowSyncConfirm(true);
         } catch (syncError) {
-          console.error("Error during sync process:", syncError);
+          //console.error("Error during sync process:", syncError);
           // Không hiển thị thông báo lỗi
         }
       }
     } catch (error) {
-      console.error('Error saving book:', error);
+      //console.error('Error saving book:', error);
       // Không hiển thị thông báo lỗi
     } finally {
       setLoading(false);
@@ -127,7 +127,7 @@ const AdminBooks = () => {
       toast.success('Xóa sách thành công');
       fetchBooks();
     } catch (error) {
-      console.error('Error deleting book:', error);
+      //console.error('Error deleting book:', error);
       // Không hiển thị thông báo lỗi
     }
   };
