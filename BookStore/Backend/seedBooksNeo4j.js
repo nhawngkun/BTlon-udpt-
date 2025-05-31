@@ -1,6 +1,6 @@
+import fs from 'fs';
 import neo4j from 'neo4j-driver';
 import dotenv from 'dotenv';
-import sampleBooks from './sampleBooks.js'; // Thay thế cho biến cục bộ
 
 dotenv.config();
 
@@ -11,36 +11,36 @@ const driver = neo4j.driver(
 
 const session = driver.session();
 
-const seedBooks = async () => {
+const exportBooksToSampleFile = async () => {
   try {
-    await session.run('MATCH (b:Book) DETACH DELETE b');
-    console.log('Deleted all existing books');
+    const result = await session.run('MATCH (b:Book) RETURN b');
+    const books = result.records.map(record => {
+      const book = record.get('b').properties;
+      return {
+        id: book.id,
+        name: book.name,
+        author: book.author,
+        lang: book.lang,
+        category: book.category,
+        image: book.image,
+        title: book.title,
+        link: book.link,
+        content: book.content,
+        description: book.description
+      };
+    });
 
-    for (const book of sampleBooks) {
-      await session.run(
-        `CREATE (b:Book {
-          id: $id,
-          name: $name,
-          author: $author,
-          lang: $lang,
-          category: $category,
-          image: $image,
-          title: $title,
-          link: $link,
-          content: $content,
-          description: $description
-        })`,
-        book
-      );
-    }
+    const formatted = JSON.stringify(books, null, 2);
+    const content = `const sampleBooks = ${formatted};\n\nexport default sampleBooks;\n`;
 
-    console.log('Seeded books to Neo4j successfully');
+    fs.writeFileSync('sampleBooks.js', content, 'utf-8');
+    console.log('✅ sampleBooks.js has been updated from Neo4j database');
   } catch (err) {
-    console.error('Error seeding books:', err.message);
+    console.error('❌ Failed to export books:', err.message);
   } finally {
     await session.close();
     await driver.close();
   }
 };
 
-seedBooks();
+exportBooksToSampleFile();
