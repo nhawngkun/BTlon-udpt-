@@ -48,7 +48,7 @@ const AdminBooks = () => {
       }
     } catch (error) {
       console.error('Error fetching books:', error);
-      toast.error('Không thể tải danh sách sách');
+      // ĐÃ XOÁ toast.error('Không thể tải danh sách sách');
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ const AdminBooks = () => {
       }
     } catch (error) {
       console.error('Error saving book:', error);
-      // Không hiển thị thông báo lỗi
+      // ĐÃ XOÁ toast.error hoặc thông báo lỗi khi lưu sách
     } finally {
       setLoading(false);
     }
@@ -121,7 +121,6 @@ const AdminBooks = () => {
     if (!window.confirm('Bạn có chắc chắn muốn xóa sách này?')) {
       return;
     }
-
     try {
       await axios.delete(`${API_URL}/book/delete/${id}`);
       toast.success('Xóa sách thành công');

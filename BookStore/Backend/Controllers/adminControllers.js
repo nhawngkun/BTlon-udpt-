@@ -1,5 +1,8 @@
 import driver from '../Database/dbconnection.js';
 import { exec } from 'child_process';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
@@ -108,7 +111,7 @@ export const deleteUser = async (req, res) => {
 // API chỉ chạy seedBooksNeo4j.js để cập nhật file sampleBooks.js
 export const runSeedBooks = (req, res) => {
   console.log("Starting process to update sampleBooks.js from Neo4j database...");
-  exec('node seedBooksNeo4j.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+  exec('node seedBooksNeo4j.js', { cwd: `${__dirname}/../` }, (err, stdout, stderr) => {
     if (err) {
       console.error('Error running seedBooksNeo4j.js:', err);
       console.error('stderr:', stderr);
@@ -130,7 +133,7 @@ export const syncBooksNeo4j = (req, res) => {
   setTimeout(() => {
     console.log('Starting syncBooksNeo4jFull.js after delay...');
     
-    exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+    exec('node syncBooksNeo4jFull.js', { cwd: `${__dirname}/../` }, (err, stdout, stderr) => {
       if (err) {
         console.error('Error running syncBooksNeo4jFull.js:', err);
         console.error('stderr:', stderr);
