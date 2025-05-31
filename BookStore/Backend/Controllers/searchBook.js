@@ -13,28 +13,20 @@ const searchBook = async (req, res) => {
         }
         const param = query.trim().toLowerCase();
 
-        // 1. Tìm sách theo thể loại (Category) chính xác
-        let cypherQuery = `
-            MATCH (b:Book)-[:BELONGS_TO]->(c:Category)
-            WHERE toLower(c.name) CONTAINS $param
+        // Tìm kiếm đồng thời theo tên sách, tiêu đề, tác giả, thể loại (ưu tiên loại bỏ tìm theo category riêng biệt)
+        const cypherQuery = `
+            MATCH (b:Book)
+            OPTIONAL MATCH (b)-[:WRITTEN_BY]->(a:Author)
+            OPTIONAL MATCH (b)-[:BELONGS_TO]->(c:Category)
+            WHERE
+                (b.name IS NOT NULL AND toLower(b.name) CONTAINS $param)
+                OR (b.title IS NOT NULL AND toLower(b.title) CONTAINS $param)
+                OR (a.name IS NOT NULL AND toLower(a.name) CONTAINS $param)
+                OR (c.name IS NOT NULL AND toLower(c.name) CONTAINS $param)
             RETURN DISTINCT b
         `;
-        let result = await session.run(cypherQuery, { param });
-        let books = result.records.map(record => record.get('b').properties);
-
-        // 2. Nếu không có sách theo thể loại, tìm theo tên sách, tiêu đề hoặc tác giả
-        if (books.length === 0) {
-            cypherQuery = `
-                MATCH (b:Book)
-                OPTIONAL MATCH (b)-[:WRITTEN_BY]->(a:Author)
-                WHERE toLower(b.name) CONTAINS $param
-                   OR toLower(b.title) CONTAINS $param
-                   OR (a.name IS NOT NULL AND toLower(a.name) CONTAINS $param)
-                RETURN DISTINCT b
-            `;
-            result = await session.run(cypherQuery, { param });
-            books = result.records.map(record => record.get('b').properties);
-        }
+        const result = await session.run(cypherQuery, { param });
+        const books = result.records.map(record => record.get('b').properties);
 
         return res.status(200).json(books);
     } catch (error) {
