@@ -24,7 +24,7 @@ const AdminBooks = () => {
   const [showForm, setShowForm] = useState(false);
   const [categories, setCategories] = useState([]);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [pendingData, setPendingData] = useState(null);
+  const [showSyncConfirm, setShowSyncConfirm] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -72,14 +72,8 @@ const AdminBooks = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setPendingData({ ...formData, image: selectedImage ? imagePreview : formData.image });
-    setShowConfirm(true);
-  };
-
-  const handleConfirmAdd = async () => {
-    setShowConfirm(false);
     try {
-      let imageUrl = pendingData.image;
+      let imageUrl = formData.image;
 
       // Xử lý upload ảnh nếu có file được chọn
       if (selectedImage) {
@@ -105,34 +99,30 @@ const AdminBooks = () => {
 
       // Cập nhật dữ liệu với URL ảnh mới
       const updatedData = {
-        ...pendingData,
+        ...formData,
         image: imageUrl
       };
 
-      // Gửi request thêm sách
+      // Thêm/cập nhật sách
       if (isEditing) {
-        await axios.put(`${API_URL}/book/edit/${pendingData.id}`, updatedData);
+        await axios.put(`${API_URL}/book/edit/${formData.id}`, updatedData);
         toast.success('Cập nhật sách thành công');
+        fetchBooks();
+        resetForm();
       } else {
         await axios.post(`${API_URL}/book/add`, updatedData);
         toast.success('Thêm sách mới thành công');
+        
+        // Sau khi thêm sách thành công, gọi API cập nhật sampleBooks.js
+        await axios.post(`${API_URL}/admin/seed-books`);
+        
+        // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
+        setShowSyncConfirm(true);
       }
-
-      // Gọi API backend để chạy syncBooksNeo4jFull.js
-      await axios.post(`${API_URL}/admin/sync-books`);
-      toast.success('Đồng bộ dữ liệu thành công');
-
-      fetchBooks();
-      resetForm();
     } catch (error) {
       console.error('Error saving book:', error);
       toast.error('Lỗi khi lưu sách');
     }
-  };
-
-  const handleCancelAdd = () => {
-    setShowConfirm(false);
-    setPendingData(null);
   };
 
   const handleDelete = async (id) => {
@@ -185,6 +175,24 @@ const AdminBooks = () => {
     setImagePreview("");
     setIsEditing(false);
     setShowForm(false);
+  };
+
+  const handleSyncConfirm = async () => {
+    setShowSyncConfirm(false);
+    try {
+      await axios.post(`${API_URL}/admin/sync-books`);
+      toast.success('Đồng bộ dữ liệu thành công');
+      fetchBooks();
+    } catch (error) {
+      console.error('Error syncing books:', error);
+      toast.error('Lỗi khi đồng bộ dữ liệu');
+    }
+  };
+
+  const handleSyncCancel = () => {
+    setShowSyncConfirm(false);
+    fetchBooks();
+    resetForm();
   };
 
   if (loading) {
@@ -366,30 +374,6 @@ const AdminBooks = () => {
         </div>
       )}
 
-      {/* Modal xác nhận */}
-      {showConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 w-80 text-center">
-            <h2 className="text-xl font-bold mb-4">Xác nhận thêm sách</h2>
-            <p>Bạn có chắc chắn muốn thêm sách này không?</p>
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                onClick={handleCancelAdd}
-                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
-              >
-                Không
-              </button>
-              <button
-                onClick={handleConfirmAdd}
-                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
-              >
-                Có
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white dark:bg-slate-800 shadow-md rounded-lg overflow-hidden">
           <thead className="bg-gray-50 dark:bg-slate-700">
@@ -440,6 +424,31 @@ const AdminBooks = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Thêm dialog xác nhận đồng bộ */}
+      {showSyncConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 w-96 text-center">
+            <h2 className="text-xl font-bold mb-4">Xác nhận đồng bộ dữ liệu</h2>
+            <p className="mb-2">Sách đã được thêm và file đã được cập nhật.</p>
+            <p>Bạn có muốn đồng bộ dữ liệu lên Neo4j không?</p>
+            <div className="flex justify-center gap-4 mt-6">
+              <button
+                onClick={handleSyncCancel}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Không
+              </button>
+              <button
+                onClick={handleSyncConfirm}
+                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
+              >
+                Có
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

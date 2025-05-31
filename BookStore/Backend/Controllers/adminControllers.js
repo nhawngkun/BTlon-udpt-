@@ -105,7 +105,19 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-// API đồng bộ lại Neo4j từ sampleBooks.js
+// API chỉ chạy seedBooksNeo4j.js để cập nhật file sampleBooks.js
+export const runSeedBooks = (req, res) => {
+  exec('node seedBooksNeo4j.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+    if (err) {
+      console.error('Error running seedBooksNeo4j.js:', err);
+      return res.status(500).json({ message: 'Seed failed', error: err.message });
+    }
+    console.log('seedBooksNeo4j.js output:', stdout);
+    res.status(200).json({ message: 'Seed completed', output: stdout });
+  });
+};
+
+// API chạy syncBooksNeo4jFull.js để đồng bộ từ file sampleBooks.js lên Neo4j
 export const syncBooksNeo4j = (req, res) => {
   exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
     if (err) {
