@@ -14,11 +14,13 @@ const Card = ({ item }) => {
     const handleAdmin = async () => {
       try {
         const userInfo = localStorage.getItem("User");
-        if (!userInfo) return;
-        
-        const userId = JSON.parse(userInfo).id; // Changed from _id to id
+        if (!userInfo) return; // Không có user, không gọi API
+
+        const user = JSON.parse(userInfo);
+        if (!user?.id) return;
+
         const res = await axios.get(
-          `${API_URL}/user/profile/${userId}`
+          `${API_URL}/user/profile/${user.id}`
         );
         console.log("User role in card:", res.data.role);
         

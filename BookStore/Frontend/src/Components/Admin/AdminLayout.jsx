@@ -14,21 +14,29 @@ const AdminLayout = () => {
   useEffect(() => {
     const checkAdminAccess = async () => {
       try {
-        // Kiểm tra nếu người dùng đã đăng nhập
-        if (!auth?.user?.id) {
+        let userId = auth?.user?.id;
+        // Nếu context mất user, lấy lại từ localStorage
+        if (!userId) {
+          const userInfo = localStorage.getItem("User");
+          if (userInfo) {
+            const user = JSON.parse(userInfo);
+            userId = user?.id;
+          }
+        }
+        if (!userId) {
           navigate('/login');
           return;
         }
 
         // Kiểm tra quyền admin
-        const response = await axios.get(`${API_URL}/user/profile/${auth.user.id}`);
+        const response = await axios.get(`${API_URL}/user/profile/${userId}`);
         const userRole = response.data.role;
         
         if (userRole && userRole.toLowerCase() === 'admin') {
           setIsAdmin(true);
         } else {
           toast.error("Bạn không có quyền truy cập trang admin");
-          navigate('/'); // Chuyển hướng nếu không phải admin
+          navigate('/');
         }
       } catch (error) {
         console.error('Error checking admin status:', error);
