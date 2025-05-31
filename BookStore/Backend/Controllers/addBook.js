@@ -6,9 +6,9 @@ const addBook = async (req, res) => {
     const session = driver.session()
     try {
         const id = uuidv4()
-        const { name, lang, category, image, title, link, content, description,author } = req.body
-       
+        const { name, lang, category, image, title, link, content, description, author } = req.body
 
+        // 1. Thêm sách vào Neo4j trước
         const result = await session.run(
             `CREATE (b:Book {
                 id: $id, name: $name, lang: $lang, category: $category,
@@ -20,8 +20,7 @@ const addBook = async (req, res) => {
 
         const book = result.records[0].get('b').properties
 
-        // Sau khi thêm sách thành công:
-        // Chạy seedBooksNeo4j.js để cập nhật sampleBooks.js
+        // 2. Sau khi thêm sách thành công, chạy seedBooksNeo4j.js để cập nhật sampleBooks.js
         exec('node seedBooksNeo4j.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
             if (err) {
                 console.error('Error running seedBooksNeo4j.js:', err);
@@ -29,7 +28,7 @@ const addBook = async (req, res) => {
             }
             console.log('seedBooksNeo4j.js output:', stdout);
 
-            // Sau khi cập nhật sampleBooks.js, chạy syncBooksNeo4jFull.js để đồng bộ lên Neo4j
+            // 3. Sau khi cập nhật sampleBooks.js, chạy syncBooksNeo4jFull.js để đồng bộ lại Neo4j
             exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err2, stdout2, stderr2) => {
                 if (err2) {
                     console.error('Error running syncBooksNeo4jFull.js:', err2);
