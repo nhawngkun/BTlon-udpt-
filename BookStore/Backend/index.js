@@ -23,16 +23,16 @@ app.use(cors({
     credentials: true
 }));
 
-const port = process.env.PORT || 8881;
-
-app.listen(port, () => {
-    console.log(`🚀 Server is running on port ${port}`);
-});
-
 // DÙNG router
 app.use('/', router);
 
 // Route xác nhận server hoạt động
 app.get('/', (req, res) => {
     res.status(200).json({ message: "BookStore backend is running!" });
+});
+
+// ✅ Di chuyển xuống dưới cùng
+const port = process.env.PORT || 8881;
+app.listen(port, () => {
+    console.log(`🚀 Server is running on port ${port}`);
 });

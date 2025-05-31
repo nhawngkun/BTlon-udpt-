@@ -15,7 +15,7 @@ const sampleBooks = [
   {
     id: "123453249",
     name: "Sách hoạt hình",
-    author: "Tác giả A",
+    author: "Nam Cao",
     lang: "Vietnamese",
     category: "Science",
     image: "https://link1.jpg",
