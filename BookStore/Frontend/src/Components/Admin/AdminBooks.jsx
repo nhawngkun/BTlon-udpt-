@@ -111,7 +111,6 @@ const AdminBooks = () => {
       }
     } catch (error) {
       console.error('Error saving book:', error);
-      toast.error('Lỗi khi lưu sách: ' + (error.response?.data?.message || error.message));
     } finally {
       setLoading(false);
     }
