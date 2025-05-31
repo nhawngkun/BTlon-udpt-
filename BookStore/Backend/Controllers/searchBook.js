@@ -18,6 +18,7 @@ const searchBook = async (req, res) => {
         if (param.startsWith('category:')) {
             const cat = param.replace('category:', '').trim();
             if (!cat) return res.status(400).json([]);
+            // Lấy sách nối với Category qua BELONGS_TO
             cypherQuery = `
                 MATCH (b:Book)-[:BELONGS_TO]->(c:Category)
                 WHERE toLower(c.name) CONTAINS toLower($param)
