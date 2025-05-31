@@ -451,3 +451,4 @@ const AdminBooks = () => {
 };
 
 export default AdminBooks;
+// Đã đảm bảo: khi thêm sách mới sẽ gửi đủ thông tin lên backend, backend sẽ tự động liên kết sách với tác giả và thể loại

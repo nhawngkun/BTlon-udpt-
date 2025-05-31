@@ -13,7 +13,6 @@ const addBook = async (req, res) => {
         const categoryName = category || 'General'  // Đảm bảo luôn có thể loại
         
         console.log(`Book details: ID=${id}, Name=${name}, Author=${author}, Category=${categoryName}`);
-
         // 1. Tạo node Book
         console.log("Creating Book node...");
         const bookResult = await transaction.run(
