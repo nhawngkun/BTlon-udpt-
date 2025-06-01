@@ -20,27 +20,11 @@ const FreeBook = () => {
             }
         }
         fetchData();
-
-        // Lắng nghe sự kiện cập nhật sách
-        const handleBooksUpdated = () => {
-            fetchData();
-        };
-        window.addEventListener('books-updated', handleBooksUpdated);
-
-        // Cleanup
-        return () => {
-            window.removeEventListener('books-updated', handleBooksUpdated);
-        };
     },[])
 
-    // Lấy 4 sách có lượt đọc nhiều nhất
-    const topBooks = [...freebooks]
-        .filter(book => typeof book.readCount === 'number')
-        .sort((a, b) => b.readCount - a.readCount)
-        .slice(0, 4);
-
-    // Nếu chưa có dữ liệu readCount, fallback về 3 sách đầu
-    const displayBooks = topBooks.length > 0 ? topBooks : freebooks.slice(0, 3);
+    // Filter theo thể loại hoặc hiển thị 3 sách đầu tiên nếu không có sách loại "Fiction"
+    const filterData = freebooks.filter((item) => item.category === "Fiction").slice(0, 3)
+    const displayBooks = filterData.length > 0 ? filterData : freebooks.slice(0, 3);
     
     if (loading) {
         return (
@@ -84,7 +68,6 @@ const FreeBook = () => {
                                 <p className="text-sm mb-4 flex-grow line-clamp-2">{book.title}</p>
                                 <div className="card-actions justify-between mt-auto">
                                     <div className="badge badge-outline p-3">{book.lang}</div>
-                                    <div className="badge badge-outline p-3">Lượt đọc: {book.readCount || 0}</div>
                                     <Link
                                         to={`/read/${book.id}`}
                                         className="badge badge-outline p-3 cursor-pointer hover:bg-pink-500 duration-200 hover:text-black"

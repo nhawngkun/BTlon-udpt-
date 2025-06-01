@@ -21,18 +21,7 @@ const Books = () => {
                 console.log(error)
             }
         }
-        fetchData();
-
-        // Lắng nghe sự kiện cập nhật sách
-        const handleBooksUpdated = () => {
-            fetchData();
-        };
-        window.addEventListener('books-updated', handleBooksUpdated);
-
-        // Cleanup
-        return () => {
-            window.removeEventListener('books-updated', handleBooksUpdated);
-        };
+        fetchData()
     }, [])
 
     useEffect(() => {

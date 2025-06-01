@@ -31,17 +31,6 @@ const RecentBooks = () => {
     };
 
     fetchBooks();
-
-    // Lắng nghe sự kiện cập nhật sách
-    const handleBooksUpdated = () => {
-      fetchBooks();
-    };
-    window.addEventListener('books-updated', handleBooksUpdated);
-
-    // Cleanup
-    return () => {
-      window.removeEventListener('books-updated', handleBooksUpdated);
-    };
   }, []);
 
   // Phân loại sách theo danh mục để hiển thị
