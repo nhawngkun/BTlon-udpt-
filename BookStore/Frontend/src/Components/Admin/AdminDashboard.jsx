@@ -30,15 +30,18 @@ const AdminDashboard = () => {
           });
           
           // Lưu danh sách sách để hiển thị lượt đọc
-          // Ở đây giả lập số lượt đọc, trong thực tế sẽ có API riêng cung cấp số liệu này
-          const booksWithReadCount = booksRes.data.map(book => ({
+          // Sắp xếp sách theo ID để lấy 10 sách mới nhất
+          const sortedBooks = [...booksRes.data].sort((a, b) => {
+            return b.id.localeCompare(a.id);
+          });
+          
+          // Lấy 10 sách mới nhất và giả lập số lượt đọc
+          const latestBooks = sortedBooks.slice(0, 10).map(book => ({
             ...book,
             readCount: Math.floor(Math.random() * 1000) // Giả lập số lượt đọc
           }));
           
-          // Sắp xếp sách theo số lượt đọc giảm dần
-          booksWithReadCount.sort((a, b) => b.readCount - a.readCount);
-          setBooks(booksWithReadCount);
+          setBooks(latestBooks);
         }
 
         setStats({
@@ -84,9 +87,9 @@ const AdminDashboard = () => {
         </div>
       </div>
       
-      {/* Bảng thống kê lượt đọc sách */}
+      {/* Bảng 10 sách mới nhất */}
       <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow mb-8">
-        <h2 className="text-xl font-bold mb-4">Thống kê lượt đọc sách</h2>
+        <h2 className="text-xl font-bold mb-4">10 sách mới nhất</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
             <thead>
@@ -94,7 +97,7 @@ const AdminDashboard = () => {
                 <th className="px-4 py-3 text-left text-sm font-semibold">Tên sách</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Tác giả</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold">Thể loại</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-right">Lượt đọc</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold">Lượt đọc</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -120,10 +123,10 @@ const AdminDashboard = () => {
             </tbody>
           </table>
         </div>
-        <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-          <p>* Lưu ý: Dữ liệu này được cập nhật theo thời gian thực</p>
-        </div>
       </div>
+      
+      {/* Các bảng thống kê khác */}
+      {/* ...existing code... */}
     </>
   );
 };
