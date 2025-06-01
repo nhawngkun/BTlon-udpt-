@@ -2,7 +2,7 @@ import neo4j from 'neo4j-driver';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: "./Config/config.env" });
+dotenv.config({ path: "./config/config.env" });
 
 const uri = process.env.NEO4J_URI || 'neo4j+s://58270351.databases.neo4j.io';
 const username = process.env.NEO4J_USER || 'neo4j';

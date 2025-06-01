@@ -9,12 +9,6 @@ const readBook = async (req, res) => {
             return res.status(400).json({ message: 'Book ID is required' });
         }
 
-        // Tăng lượt đọc
-        await session.run(
-            'MATCH (b:Book {id: $id}) SET b.readCount = coalesce(b.readCount, 0) + 1',
-            { id }
-        );
-
         const result = await session.run(
             'MATCH (b:Book {id: $id}) RETURN b',
             { id }
@@ -36,8 +30,7 @@ const readBook = async (req, res) => {
             description: book.description,
             content: book.content,
             link: book.link,
-            author: book.author,
-            readCount: book.readCount?.toNumber ? book.readCount.toNumber() : (book.readCount || 0)
+            author: book.author  // thêm dòng này
         });
 
     } catch (error) {
