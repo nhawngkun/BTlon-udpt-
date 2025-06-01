@@ -92,31 +92,12 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
-        // BƯỚC 1: Thêm sách mới vào Neo4j
+        // Thêm sách mới vào Neo4j (đã tự động liên kết tác giả và thể loại)
         const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
         if (!addResponse.data.success) {
           throw new Error(`⛔ Thêm sách thất bại: ${addResponse.data.message}`);
         }
-        const newBookId = addResponse.data.data.id;
-
-        // BƯỚC 2: Luôn truyền author và category vừa nhập (có thể là mới)
-        const connectData = {
-          bookId: newBookId,
-          author: updatedData.author?.trim() || 'Unknown Author',
-          category: updatedData.category?.trim() || 'General'
-        };
-
-        const relationshipResponse = await axios.post(
-          `${API_URL}/admin/connect-book-relationships`,
-          connectData,
-          { timeout: 10000 }
-        );
-
-        if (!relationshipResponse.data.success) {
-          toast.error(`Sách đã được thêm nhưng không thể liên kết: ${relationshipResponse.data.message}`);
-        } else {
-          toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
-        }
+        toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
         fetchBooks();
         resetForm();
       }
