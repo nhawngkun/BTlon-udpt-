@@ -20,6 +20,17 @@ const FreeBook = () => {
             }
         }
         fetchData();
+
+        // Lắng nghe sự kiện cập nhật sách
+        const handleBooksUpdated = () => {
+            fetchData();
+        };
+        window.addEventListener('books-updated', handleBooksUpdated);
+
+        // Cleanup
+        return () => {
+            window.removeEventListener('books-updated', handleBooksUpdated);
+        };
     },[])
 
     // Filter theo thể loại hoặc hiển thị 3 sách đầu tiên nếu không có sách loại "Fiction"

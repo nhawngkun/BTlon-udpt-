@@ -90,6 +90,7 @@ const AdminBooks = () => {
         await axios.put(`${API_URL}/book/edit/${formData.id}`, updatedData);
         toast.success('Cập nhật sách thành công');
         fetchBooks();
+        window.dispatchEvent(new Event('books-updated')); // Thông báo cập nhật sách
         resetForm();
       } else {
         // Thêm sách mới vào Neo4j (đã tự động liên kết tác giả và thể loại)
@@ -99,6 +100,7 @@ const AdminBooks = () => {
         }
         toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
         fetchBooks();
+        window.dispatchEvent(new Event('books-updated')); // Thông báo cập nhật sách
         resetForm();
       }
     } catch (error) {
