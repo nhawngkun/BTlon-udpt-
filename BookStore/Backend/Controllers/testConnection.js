@@ -1,12 +1,16 @@
 // testConnection.js
 import { config } from 'dotenv';
 import neo4j from 'neo4j-driver';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Đường dẫn từ Controllers đến Config
-config({ path: '../Config/config.env' });
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const envPath = path.resolve(__dirname, '../Config/config.env');
+config({ path: envPath });
 
 const URI = process.env.NEO4J_URI;
-const USER = process.env.NEO4J_USERNAME;
+const USER = process.env.NEO4J_USER; // Sửa lại tên biến
 const PASSWORD = process.env.NEO4J_PASSWORD;
 
 async function testConnection() {

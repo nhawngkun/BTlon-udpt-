@@ -1,8 +1,4 @@
 // Config for backend API URL
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  process.env.REACT_APP_API_URL ||
-  "https://bookstore-backend-production.up.railway.app" || // Thay bằng domain backend thật nếu có
-  "http://localhost:5000";
-
+const API_URL = "https://bs-noqz.onrender.com";
+console.log("Backend URL loaded:", API_URL);
 export default API_URL;

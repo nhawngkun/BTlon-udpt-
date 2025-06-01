@@ -4,8 +4,12 @@ import { configDotenv } from 'dotenv';
 import driver from './Database/dbconnection.js'; // ← dùng đúng tên export
 import router from './Router/router.js';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-configDotenv({ path: "./config/config.env" });
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+configDotenv({ path: path.resolve(__dirname, './Config/config.env') });
 
 const app = express();
 
