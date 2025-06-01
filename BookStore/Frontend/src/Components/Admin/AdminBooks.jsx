@@ -93,19 +93,39 @@ const AdminBooks = () => {
         resetForm();
       } else {
         // BƯỚC 1: Thêm sách mới vào Neo4j
-        console.log("Bước 1: Thêm sách vào Neo4j");
+        console.log("Bước 1: Thêm sách vào Neo4j với dữ liệu:", updatedData);
         const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
+        
+        if (!addResponse.data.success) {
+          throw new Error(`Thêm sách thất bại: ${addResponse.data.message}`);
+        }
+        
         const newBookId = addResponse.data.data.id;
+        console.log(`Sách đã được thêm với ID: ${newBookId}`);
         
         // BƯỚC 2: Tạo các mối quan hệ cho sách
-        console.log("Bước 2: Tạo các mối quan hệ cho sách với tác giả và thể loại");
-        await axios.post(`${API_URL}/admin/connect-book-relationships`, {
+        console.log(`Bước 2: Tạo quan hệ cho sách ID=${newBookId} với tác giả="${updatedData.author}" và thể loại="${updatedData.category}"`);
+        const connectData = {
           bookId: newBookId,
           author: updatedData.author || 'Unknown Author',
           category: updatedData.category || 'General'
-        });
+        };
         
-        toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
+        try {
+          const relationshipResponse = await axios.post(`${API_URL}/admin/connect-book-relationships`, connectData);
+          console.log("Kết quả tạo quan hệ:", relationshipResponse.data);
+          
+          if (!relationshipResponse.data.success) {
+            console.error("Lỗi khi tạo quan hệ:", relationshipResponse.data.message);
+            toast.error(`Sách đã được thêm nhưng không thể liên kết: ${relationshipResponse.data.message}`);
+          } else {
+            toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
+          }
+        } catch (relationshipError) {
+          console.error("Lỗi gọi API tạo quan hệ:", relationshipError);
+          toast.error('Sách đã được thêm nhưng không thể liên kết với tác giả và thể loại. Vui lòng kiểm tra console để biết thêm chi tiết.');
+        }
+        
         fetchBooks();
         resetForm();
       }
