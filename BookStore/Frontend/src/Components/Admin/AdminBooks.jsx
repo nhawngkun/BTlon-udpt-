@@ -94,11 +94,9 @@ const AdminBooks = () => {
         await axios.post(`${API_URL}/book/add`, updatedData);
         toast.success('Thêm sách mới thành công');
         
-        // Sau khi thêm sách thành công, gọi API cập nhật sampleBooks.js
-        await axios.post(`${API_URL}/admin/seed-books`);
-        
-        // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
-        setShowSyncConfirm(true);
+        // Không tự động chạy scripts sau khi thêm sách
+        fetchBooks();
+        resetForm();
       }
     } catch (error) {
       console.error('Error saving book:', error);
@@ -188,12 +186,32 @@ const AdminBooks = () => {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Quản lý sách</h2>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
-        >
-          {showForm ? 'Đóng form' : 'Thêm sách mới'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              axios.post(`${API_URL}/admin/seed-books`)
+                .then(() => toast.success('Cập nhật file sampleBooks.js thành công'))
+                .catch(err => toast.error('Lỗi khi cập nhật file sampleBooks.js'));
+            }}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >
+            Cập nhật file sampleBooks
+          </button>
+          <button
+            onClick={() => {
+              setShowSyncConfirm(true);
+            }}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+          >
+            Đồng bộ lên Neo4j
+          </button>
+          <button
+            onClick={() => setShowForm(!showForm)}
+            className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
+          >
+            {showForm ? 'Đóng form' : 'Thêm sách mới'}
+          </button>
+        </div>
       </div>
 
       {showForm && (

@@ -107,6 +107,7 @@ export const deleteUser = async (req, res) => {
 
 // API chỉ chạy seedBooksNeo4j.js để cập nhật file sampleBooks.js
 export const runSeedBooks = (req, res) => {
+  console.log('Chạy thủ công seedBooksNeo4j.js: Chức năng này cập nhật file sampleBooks.js từ dữ liệu Neo4j');
   exec('node seedBooksNeo4j.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
     if (err) {
       console.error('Error running seedBooksNeo4j.js:', err);
@@ -119,24 +120,20 @@ export const runSeedBooks = (req, res) => {
 
 // API chạy syncBooksNeo4jFull.js để đồng bộ từ file sampleBooks.js lên Neo4j
 export const syncBooksNeo4j = (req, res) => {
-  // Thêm độ trễ 10 giây trước khi chạy syncBooksNeo4jFull.js
-  console.log('Waiting 10 seconds before running syncBooksNeo4jFull.js...');
+  console.log('Chạy thủ công syncBooksNeo4jFull.js: Chức năng này đồng bộ dữ liệu từ file sampleBooks.js lên Neo4j');
   
-  setTimeout(() => {
-    console.log('Starting syncBooksNeo4jFull.js after delay...');
-    
-    exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
-      if (err) {
-        console.error('Error running syncBooksNeo4jFull.js:', err);
-        return res.status(500).json({ message: 'Sync failed', error: err.message });
-      }
-      console.log('syncBooksNeo4jFull.js output:', stdout);
-      res.status(200).json({ 
-        message: 'Sync completed after waiting 10 seconds', 
-        output: stdout 
-      });
+  // Không còn độ trễ 10 giây
+  exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+    if (err) {
+      console.error('Error running syncBooksNeo4jFull.js:', err);
+      return res.status(500).json({ message: 'Sync failed', error: err.message });
+    }
+    console.log('syncBooksNeo4jFull.js output:', stdout);
+    res.status(200).json({ 
+      message: 'Đã đồng bộ dữ liệu từ file sampleBooks.js lên Neo4j thành công', 
+      output: stdout 
     });
-  }, 10000); // Đợi 10 giây (10000 ms)
+  });
 };
 
 // Thêm vào cuối file:
