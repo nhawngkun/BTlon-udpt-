@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid'
 import driver from '../Database/dbconnection.js'
+import { standardizeCategory, standardizeAuthor } from '../utils/stringUtils.js'
 
 const addBook = async (req, res) => {
     const session = driver.session()
@@ -7,45 +8,49 @@ const addBook = async (req, res) => {
         const id = uuidv4()
         const { name, lang, category, image, title, link, content, description, author } = req.body
 
+        // Standardize the category and author names
+        const standardizedCategory = standardizeCategory(category)
+        const standardizedAuthor = standardizeAuthor(author)
+
         // 1. Thêm sách vào Neo4j
         const result = await session.run(
             `CREATE (b:Book {
-                id: $id, name: $name, lang: $lang, category: $category,
+                id: $id, name: $name, lang: $lang, category: $standardizedCategory,
                 image: $image, title: $title, link: $link,
-                content: $content, description: $description, author: $author
+                content: $content, description: $description, author: $standardizedAuthor
             }) RETURN b`,
-            { id, name, lang, category, image, title, link, content, description, author }
+            { id, name, lang, standardizedCategory, image, title, link, content, description, standardizedAuthor }
         )
 
         const book = result.records[0].get('b').properties
         
         // 2. Tạo hoặc tìm node Author nếu có
-        if (author) {
+        if (standardizedAuthor) {
             await session.run(
-                `MERGE (a:Author {name: $author}) RETURN a`,
-                { author }
+                `MERGE (a:Author {name: $standardizedAuthor}) RETURN a`,
+                { standardizedAuthor }
             )
             
             // 3. Tạo mối quan hệ giữa Book và Author
             await session.run(
-                `MATCH (b:Book {id: $id}), (a:Author {name: $author})
+                `MATCH (b:Book {id: $id}), (a:Author {name: $standardizedAuthor})
                  MERGE (b)-[:WRITTEN_BY]->(a)`,
-                { id, author }
+                { id, standardizedAuthor }
             )
         }
         
         // 4. Tạo hoặc tìm node Category nếu có
-        if (category) {
+        if (standardizedCategory) {
             await session.run(
-                `MERGE (c:Category {name: $category}) RETURN c`,
-                { category }
+                `MERGE (c:Category {name: $standardizedCategory}) RETURN c`,
+                { standardizedCategory }
             )
             
             // 5. Tạo mối quan hệ giữa Book và Category
             await session.run(
-                `MATCH (b:Book {id: $id}), (c:Category {name: $category})
+                `MATCH (b:Book {id: $id}), (c:Category {name: $standardizedCategory})
                  MERGE (b)-[:BELONGS_TO]->(c)`,
-                { id, category }
+                { id, standardizedCategory }
             )
         }
 
