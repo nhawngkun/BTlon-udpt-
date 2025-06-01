@@ -82,31 +82,79 @@ const AdminBooks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // formData.image đã chứa base64 hoặc URL trực tiếp
+      setLoading(true);
       const updatedData = { ...formData };
       
       if (isEditing) {
+        // Xử lý chỉnh sửa sách
         await axios.put(`${API_URL}/book/edit/${formData.id}`, updatedData);
         toast.success('Cập nhật sách thành công');
         fetchBooks();
         resetForm();
       } else {
-        // Thêm sách mới
-        const response = await axios.post(`${API_URL}/book/add`, updatedData);
+        // BƯỚC 1: Thêm sách mới vào Neo4j và log chi tiết hơn
+        console.log("🔄 BƯỚC 1: Thêm sách mới", {
+          tên: updatedData.name,
+          tácGiả: updatedData.author,
+          thểLoại: updatedData.category
+        });
         
-        if (response.data && response.data.message) {
-          toast.success('Thêm sách mới thành công');
-          
-          // Cập nhật danh sách sách
-          fetchBooks();
-          
-          // Đặt lại form
-          resetForm();
+        const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
+        
+        if (!addResponse.data.success) {
+          throw new Error(`⛔ Thêm sách thất bại: ${addResponse.data.message}`);
         }
+        
+        const newBookId = addResponse.data.data.id;
+        console.log(`✅ Sách đã được thêm thành công với ID: ${newBookId}`);
+        
+        // BƯỚC 2: Tạo quan hệ với tác giả và thể loại
+        console.log(`🔄 BƯỚC 2: Tạo quan hệ cho sách ID=${newBookId}`);
+        try {
+          const connectData = {
+            bookId: newBookId,
+            author: updatedData.author,
+            category: updatedData.category
+          };
+          
+          // Thiết lập timeout dài hơn để tránh lỗi mạng 
+          const relationshipResponse = await axios.post(
+            `${API_URL}/admin/connect-book-relationships`, 
+            connectData,
+            { timeout: 15000 } // Tăng timeout lên 15 giây
+          );
+          
+          if (relationshipResponse.data.success) {
+            console.log("✅ Kết quả tạo quan hệ:", relationshipResponse.data);
+            toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
+          } else {
+            console.warn("⚠️ Tạo quan hệ không thành công:", relationshipResponse.data);
+            toast.warning('Sách đã được thêm nhưng có vấn đề khi liên kết với tác giả/thể loại');
+          }
+        } catch (relationshipError) {
+          console.error("❌ Lỗi khi tạo quan hệ:", relationshipError);
+          toast.warning('Sách đã được thêm nhưng không thể liên kết với tác giả/thể loại');
+        }
+        
+        fetchBooks();
+        resetForm();
       }
     } catch (error) {
-      console.error('Error saving book:', error);
-      toast.error('Lỗi khi lưu sách');
+      console.error('❌ LỖI:', error);
+      
+      // Hiển thị thông báo lỗi chi tiết hơn
+      if (error.response) {
+        // Lỗi từ phía server
+        toast.error(`Lỗi (${error.response.status}): ${error.response.data.message || 'Không thể xử lý yêu cầu'}`);
+      } else if (error.request) {
+        // Không nhận được phản hồi
+        toast.error('Không nhận được phản hồi từ server. Vui lòng kiểm tra kết nối.');
+      } else {
+        // Lỗi khác
+        toast.error(`Lỗi: ${error.message}`);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
