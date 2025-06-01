@@ -1,6 +1,5 @@
 import driver from '../Database/dbconnection.js';
 import { exec } from 'child_process';
-import { standardizeCategory, standardizeAuthor } from '../utils/stringUtils.js';
 
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
@@ -145,10 +144,8 @@ export const connectBookRelationships = async (req, res) => {
     if (!bookId) {
       return res.status(400).json({ success: false, message: "Thiếu thông tin: bookId là bắt buộc" });
     }
-    
-    // Standardize author and category names
-    const actualAuthor = standardizeAuthor(author);
-    const actualCategory = standardizeCategory(category);
+    const actualAuthor = author?.trim() || 'Unknown Author';
+    const actualCategory = category?.trim() || 'General';
 
     // Kiểm tra sự tồn tại của sách
     const bookCheckResult = await session.run(
