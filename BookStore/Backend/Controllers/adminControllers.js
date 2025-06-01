@@ -112,18 +112,54 @@ export const runSeedBooks = (req, res) => {
     message: 'Feature disabled: No longer automatically updates sampleBooks.js',
     info: 'The book was added directly to Neo4j database'
   });
-  
-  // Có thể bỏ comment đoạn code dưới đây nếu muốn cho phép admin chạy thủ công
-  /*
-  exec('node seedBooksNeo4j.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
-    if (err) {
-      console.error('Error running seedBooksNeo4j.js:', err);
-      return res.status(500).json({ message: 'Seed failed', error: err.message });
-    }
-    console.log('seedBooksNeo4j.js output:', stdout);
-    res.status(200).json({ message: 'Seed completed', output: stdout });
-  });
-  */
+};
+
+// API mới: Tự động tạo các quan hệ cho sách với tác giả và thể loại
+export const connectBookRelationships = async (req, res) => {
+  const session = driver.session();
+  try {
+    const { bookId, author, category } = req.body;
+    console.log(`Kết nối sách ID=${bookId} với tác giả "${author}" và thể loại "${category}"`);
+    
+    // 1. Tạo hoặc tìm node Author
+    await session.run(
+      `MERGE (a:Author {name: $author}) RETURN a`,
+      { author }
+    );
+    
+    // 2. Tạo hoặc tìm node Category
+    await session.run(
+      `MERGE (c:Category {name: $category}) RETURN c`,
+      { category }
+    );
+    
+    // 3. Nối Book với Author qua quan hệ WRITTEN_BY
+    await session.run(
+      `MATCH (b:Book {id: $bookId}), (a:Author {name: $author})
+       MERGE (b)-[:WRITTEN_BY]->(a)`,
+      { bookId, author }
+    );
+    
+    // 4. Nối Book với Category qua quan hệ BELONGS_TO
+    await session.run(
+      `MATCH (b:Book {id: $bookId}), (c:Category {name: $category})
+       MERGE (b)-[:BELONGS_TO]->(c)`,
+      { bookId, category }
+    );
+    
+    res.status(200).json({
+      success: true,
+      message: "Đã kết nối sách với tác giả và thể loại thành công"
+    });
+  } catch (error) {
+    console.error("Lỗi khi kết nối quan hệ:", error);
+    res.status(500).json({ 
+      success: false,
+      message: `Lỗi khi kết nối sách với tác giả và thể loại: ${error.message}`
+    });
+  } finally {
+    await session.close();
+  }
 };
 
 // API chạy syncBooksNeo4jFull.js để đồng bộ từ file sampleBooks.js lên Neo4j

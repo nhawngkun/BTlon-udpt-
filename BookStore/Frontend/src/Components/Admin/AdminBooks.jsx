@@ -83,24 +83,29 @@ const AdminBooks = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      // formData.image đã chứa base64 hoặc URL trực tiếp
       const updatedData = { ...formData };
       
       if (isEditing) {
+        // Xử lý chỉnh sửa sách
         await axios.put(`${API_URL}/book/edit/${formData.id}`, updatedData);
         toast.success('Cập nhật sách thành công');
         fetchBooks();
         resetForm();
       } else {
-        // Thêm sách mới - chỉ gọi API thêm sách, không gọi API đồng bộ nữa
-        await axios.post(`${API_URL}/book/add`, updatedData);
+        // Thêm sách mới
+        const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
+        const newBookId = addResponse.data.data.id;
+        
+        // Gọi API kết nối sách với tác giả và thể loại
+        await axios.post(`${API_URL}/admin/connect-book-relationships`, {
+          bookId: newBookId,
+          author: updatedData.author || 'Unknown Author',
+          category: updatedData.category || 'General'
+        });
+        
         toast.success('Thêm sách mới thành công');
         fetchBooks();
         resetForm();
-        
-        // Đã xóa các bước:
-        // 1. Gọi API cập nhật sampleBooks.js
-        // 2. Hiển thị dialog xác nhận đồng bộ
       }
     } catch (error) {
       console.error('Error saving book:', error);

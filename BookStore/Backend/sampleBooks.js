@@ -1,5 +1,29 @@
 const sampleBooks = [
   {
+    "id": "c7739d0f-1725-4b80-8fc5-2963497f0caf",
+    "name": "thang",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/b460171c-d958-474d-9597-9f180805fd64",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
+  },
+  {
+    "id": "7d113ea0-8fb9-4959-a0d7-6da5132da752",
+    "name": "quuuuuuui",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/8c4c164e-9a9b-4ba6-bdfc-99dcb80ff14e",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
+  },
+  {
     "id": "123456789",
     "name": "Thế Giới Atlantis",
     "author": "Tác giả A",
