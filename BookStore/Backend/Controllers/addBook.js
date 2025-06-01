@@ -46,13 +46,36 @@ const addBook = async (req, res) => {
             }) RETURN b`,
             { id, name, actualLang, actualCategory, image, title, link, content, description, actualAuthor }
         )
-        
+
+        // Tạo hoặc tìm Author node
+        await session.run(
+            `MERGE (a:Author {name: $actualAuthor})`,
+            { actualAuthor }
+        );
+        // Tạo hoặc tìm Category node
+        await session.run(
+            `MERGE (c:Category {name: $actualCategory})`,
+            { actualCategory }
+        );
+        // Nối Book với Author
+        await session.run(
+            `MATCH (b:Book {id: $id}), (a:Author {name: $actualAuthor})
+             MERGE (b)-[:WRITTEN_BY]->(a)`,
+            { id, actualAuthor }
+        );
+        // Nối Book với Category
+        await session.run(
+            `MATCH (b:Book {id: $id}), (c:Category {name: $actualCategory})
+             MERGE (b)-[:BELONGS_TO]->(c)`,
+            { id, actualCategory }
+        );
+
         console.log(`[SUCCESS] ✅ Đã tạo sách mới thành công với ID: ${id}`)
         
         const book = result.records[0].get('b').properties
         res.status(200).json({ 
             success: true,
-            message: "Thêm sách thành công. Đang tiếp tục liên kết với tác giả và thể loại.", 
+            message: "Thêm sách thành công và đã tự động liên kết với tác giả và thể loại.", 
             data: book 
         })
     } catch (error) {
