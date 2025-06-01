@@ -40,7 +40,7 @@ async function syncBooksWithAuthors() {
           description: $description,
           readCount: 0
         })`,
-        book
+        book//
       );
       console.log(`  ✓ Đã tạo sách: ${book.name}`);
 
