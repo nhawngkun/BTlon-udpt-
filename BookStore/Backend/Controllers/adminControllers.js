@@ -138,3 +138,50 @@ export const syncBooksNeo4j = (req, res) => {
     });
   }, 10000); // Đợi 10 giây (10000 ms)
 };
+
+// Thêm vào cuối file:
+export const connectBookRelationships = async (req, res) => {
+  const session = driver.session();
+  try {
+    const { bookId, author, category } = req.body;
+    if (!bookId) {
+      return res.status(400).json({ success: false, message: "Thiếu thông tin: bookId là bắt buộc" });
+    }
+    const actualAuthor = author?.trim() || 'Unknown Author';
+    const actualCategory = category?.trim() || 'General';
+
+    // Kiểm tra sự tồn tại của sách
+    const bookCheckResult = await session.run(
+      `MATCH (b:Book {id: $bookId}) RETURN b`,
+      { bookId }
+    );
+    if (bookCheckResult.records.length === 0) {
+      return res.status(404).json({ success: false, message: `Không tìm thấy sách với ID: ${bookId}` });
+    }
+
+    // Tạo/tìm Author
+    await session.run(`MERGE (a:Author {name: $actualAuthor}) RETURN a`, { actualAuthor });
+    // Tạo/tìm Category
+    await session.run(`MERGE (c:Category {name: $actualCategory}) RETURN c`, { actualCategory });
+    // Nối Book với Author
+    await session.run(
+      `MATCH (b:Book {id: $bookId}) MATCH (a:Author {name: $actualAuthor}) MERGE (b)-[:WRITTEN_BY]->(a) RETURN b, a`,
+      { bookId, actualAuthor }
+    );
+    // Nối Book với Category
+    await session.run(
+      `MATCH (b:Book {id: $bookId}) MATCH (c:Category {name: $actualCategory}) MERGE (b)-[:BELONGS_TO]->(c) RETURN b, c`,
+      { bookId, actualCategory }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Đã kết nối sách với tác giả và thể loại thành công",
+      relationships: { bookId, author: actualAuthor, category: actualCategory }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: `Lỗi khi kết nối sách với tác giả và thể loại: ${error.message}` });
+  } finally {
+    await session.close();
+  }
+};
