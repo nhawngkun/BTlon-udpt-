@@ -107,6 +107,14 @@ export const deleteUser = async (req, res) => {
 
 // API chỉ chạy seedBooksNeo4j.js để cập nhật file sampleBooks.js
 export const runSeedBooks = (req, res) => {
+  // Chỉ trả về thông báo thành công mà không thực sự chạy file seedBooksNeo4j.js
+  res.status(200).json({ 
+    message: 'Feature disabled: No longer automatically updates sampleBooks.js',
+    info: 'The book was added directly to Neo4j database'
+  });
+  
+  // Có thể bỏ comment đoạn code dưới đây nếu muốn cho phép admin chạy thủ công
+  /*
   exec('node seedBooksNeo4j.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
     if (err) {
       console.error('Error running seedBooksNeo4j.js:', err);
@@ -115,26 +123,31 @@ export const runSeedBooks = (req, res) => {
     console.log('seedBooksNeo4j.js output:', stdout);
     res.status(200).json({ message: 'Seed completed', output: stdout });
   });
+  */
 };
 
 // API chạy syncBooksNeo4jFull.js để đồng bộ từ file sampleBooks.js lên Neo4j
 export const syncBooksNeo4j = (req, res) => {
-  // Thêm độ trễ 10 giây trước khi chạy syncBooksNeo4jFull.js
-  console.log('Waiting 10 seconds before running syncBooksNeo4jFull.js...');
+  // Chỉ trả về thông báo thành công mà không thực sự chạy file syncBooksNeo4jFull.js
+  res.status(200).json({ 
+    message: 'Feature disabled: No longer syncs from sampleBooks.js to Neo4j',
+    info: 'The book was added directly to Neo4j database'
+  });
   
-  setTimeout(() => {
-    console.log('Starting syncBooksNeo4jFull.js after delay...');
-    
-    exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
-      if (err) {
-        console.error('Error running syncBooksNeo4jFull.js:', err);
-        return res.status(500).json({ message: 'Sync failed', error: err.message });
-      }
-      console.log('syncBooksNeo4jFull.js output:', stdout);
-      res.status(200).json({ 
-        message: 'Sync completed after waiting 10 seconds', 
-        output: stdout 
-      });
+  // Có thể bỏ comment đoạn code dưới đây nếu muốn cho phép admin chạy thủ công
+  /*
+  console.log('Starting syncBooksNeo4jFull.js...');
+  
+  exec('node syncBooksNeo4jFull.js', { cwd: __dirname + '/../' }, (err, stdout, stderr) => {
+    if (err) {
+      console.error('Error running syncBooksNeo4jFull.js:', err);
+      return res.status(500).json({ message: 'Sync failed', error: err.message });
+    }
+    console.log('syncBooksNeo4jFull.js output:', stdout);
+    res.status(200).json({ 
+      message: 'Sync completed', 
+      output: stdout 
     });
-  }, 10000); // Đợi 10 giây (10000 ms)
+  });
+  */
 };

@@ -82,6 +82,7 @@ const AdminBooks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       // formData.image đã chứa base64 hoặc URL trực tiếp
       const updatedData = { ...formData };
       
@@ -91,18 +92,21 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
+        // Thêm sách mới - chỉ gọi API thêm sách, không gọi API đồng bộ nữa
         await axios.post(`${API_URL}/book/add`, updatedData);
         toast.success('Thêm sách mới thành công');
+        fetchBooks();
+        resetForm();
         
-        // Sau khi thêm sách thành công, gọi API cập nhật sampleBooks.js
-        await axios.post(`${API_URL}/admin/seed-books`);
-        
-        // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
-        setShowSyncConfirm(true);
+        // Đã xóa các bước:
+        // 1. Gọi API cập nhật sampleBooks.js
+        // 2. Hiển thị dialog xác nhận đồng bộ
       }
     } catch (error) {
       console.error('Error saving book:', error);
       toast.error('Lỗi khi lưu sách');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -156,24 +160,6 @@ const AdminBooks = () => {
     setImagePreview("");
     setIsEditing(false);
     setShowForm(false);
-  };
-
-  const handleSyncConfirm = async () => {
-    setShowSyncConfirm(false);
-    try {
-      await axios.post(`${API_URL}/admin/sync-books`);
-      toast.success('Đồng bộ dữ liệu thành công');
-      fetchBooks();
-    } catch (error) {
-      console.error('Error syncing books:', error);
-      toast.error('Lỗi khi đồng bộ dữ liệu');
-    }
-  };
-
-  const handleSyncCancel = () => {
-    setShowSyncConfirm(false);
-    fetchBooks();
-    resetForm();
   };
 
   if (loading) {
@@ -405,31 +391,6 @@ const AdminBooks = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Thêm dialog xác nhận đồng bộ */}
-      {showSyncConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 w-96 text-center">
-            <h2 className="text-xl font-bold mb-4">Xác nhận đồng bộ dữ liệu</h2>
-            <p className="mb-2">Sách đã được thêm và file đã được cập nhật.</p>
-            <p>Bạn có muốn đồng bộ dữ liệu lên Neo4j không?</p>
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                onClick={handleSyncCancel}
-                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
-              >
-                Không
-              </button>
-              <button
-                onClick={handleSyncConfirm}
-                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
-              >
-                Có
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
