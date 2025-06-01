@@ -11,7 +11,7 @@ import addBook from '../Controllers/addBook.js';
 import getBook from '../Controllers/getBook.js';
 import readBook from '../Controllers/readBook.js';
 import searchBook from '../Controllers/searchBook.js';
-import { getAllUsers, getStats, deleteUser, runSeedBooks, syncBooksNeo4j } from '../Controllers/adminControllers.js';
+import { getAllUsers, getStats, deleteUser, runSeedBooks, syncBooksNeo4j, connectBookRelationships } from '../Controllers/adminControllers.js';
 import authMiddleware from '../Middleware/authMiddleware.js';
 
 
@@ -43,6 +43,7 @@ router.get('/admin/stats', getStats);
 router.delete('/admin/users/:id', deleteUser);
 router.post('/admin/seed-books', runSeedBooks); // API chạy seedBooksNeo4j
 router.post('/admin/sync-books', syncBooksNeo4j); // API chạy syncBooksNeo4jFull
+router.post('/admin/connect-book-relationships', connectBookRelationships); // <-- Thêm dòng này
 
 // Other routes
 // router.post('/sendmail', sendmail);
