@@ -37,7 +37,8 @@ async function syncBooksWithAuthors() {
           title: $title,
           link: $link,
           content: $content,
-          description: $description
+          description: $description,
+          readCount: 0
         })`,
         book
       );

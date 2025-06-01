@@ -9,7 +9,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "123456789",
@@ -21,7 +22,8 @@ const sampleBooks = [
     "title": "Sách khoa học viễn tưởng cực hay",
     "link": "",
     "content": "Nội dung chi tiết sách...",
-    "description": "Giới thiệu ngắn gọn về sách"
+    "description": "Giới thiệu ngắn gọn về sách",
+    "readCount": 0
   },
   {
     "id": "17473851585112",
@@ -33,7 +35,8 @@ const sampleBooks = [
     "title": "Tắt Đèn (Tái Bản) là một trong những tác phẩm văn học tiêu biểu nhất của nhà văn Ngô Tất Tố (tiểu thuyết, in trên báo Việt nữ năm 1937).",
     "link": "",
     "content": "Trăm năm trong cõi người ta,\nChữ tài chữ mệnh khéo là ghét nhau.\nTrải qua một cuộc bể dâu,\nNhững điều trông thấy mà đau đớn lòng.",
-    "description": "Kiệt tác thơ lục bát Việt Nam"
+    "description": "Kiệt tác thơ lục bát Việt Nam",
+    "readCount": 0
   },
   {
     "id": "17473851585551421",
@@ -45,7 +48,8 @@ const sampleBooks = [
     "title": "Tác phẩm khoa học phổ thông của Lê Minh Đức",
     "link": "",
     "content": "Tác phẩm giải thích những khái niệm vật lý và vũ trụ học như Big Bang, lỗ đen, không-thời gian, thuyết tương đối và thuyết lượng tử bằng ngôn ngữ phổ thông cho mọi người cùng tiếp cận.",
-    "description": "Sách khoa học phổ thông về vũ trụ và thời gian"
+    "description": "Sách khoa học phổ thông về vũ trụ và thời gian",
+    "readCount": 0
   },
   {
     "id": "17473851585171812",
@@ -57,7 +61,8 @@ const sampleBooks = [
     "title": "Tác phẩm kinh điển của Tô Hoài",
     "link": "",
     "content": "Dế Mèn Phiêu Lưu Ký là tác phẩm nổi tiếng.",
-    "description": "Giới thiệu ngắn gọn về sách"
+    "description": "Giới thiệu ngắn gọn về sách",
+    "readCount": 0
   },
   {
     "id": "123453249",
@@ -69,7 +74,8 @@ const sampleBooks = [
     "title": "Sách khoa học",
     "link": "",
     "content": "Nội dung chi tiết sách.",
-    "description": "Giới thiệu ngắn gọn về sách"
+    "description": "Giới thiệu ngắn gọn về sách",
+    "readCount": 0
   },
   {
     "id": "1ffcac2b-63fc-41d1-af51-58834e0ca732",
@@ -81,7 +87,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "aa",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "dafe1d55-8e0b-4101-96a3-92abdffef50f",
@@ -93,7 +100,8 @@ const sampleBooks = [
     "title": "s",
     "link": "",
     "content": "s",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "c910f01b-28cc-461a-b3a8-70a34f0bcd46",
@@ -105,7 +113,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "dc349f3f-936e-4473-ac86-f2a841d62274",
@@ -117,7 +126,8 @@ const sampleBooks = [
     "title": "Q",
     "link": "",
     "content": "Q",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "1175c8bb-7773-4428-ac98-dd76bc9fc47e",
@@ -129,7 +139,8 @@ const sampleBooks = [
     "title": "q",
     "link": "",
     "content": "q",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "ed06d329-9481-4b00-a4e1-93f17647748b",
@@ -141,7 +152,8 @@ const sampleBooks = [
     "title": "d",
     "link": "",
     "content": "d",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "d6e81903-cdcf-4e59-8aae-0fbfb362c7ec",
@@ -153,7 +165,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "37fa060a-3afb-4b62-9049-05b73dcdd1e7",
@@ -165,7 +178,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "q",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "bca5deae-6633-47f3-ae54-2f5b704cc3aa",
@@ -177,7 +191,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": "a"
+    "description": "a",
+    "readCount": 0
   },
   {
     "id": "44fef3d8-5f30-4d4b-812e-d4ee03579983",
@@ -189,7 +204,8 @@ const sampleBooks = [
     "title": "s",
     "link": "",
     "content": "s",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "da03ea54-5786-4c4a-ae07-726cd036c1fa",
@@ -201,7 +217,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "74a62fce-9e7a-4a8e-90f1-958f1e671d3b",
@@ -213,7 +230,8 @@ const sampleBooks = [
     "title": "s",
     "link": "",
     "content": "s",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "c7207323-3b54-4f60-9a6c-b738c7529c41",
@@ -225,7 +243,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "754ba0b2-3048-47e3-9387-2fb6b96e6438",
@@ -237,7 +256,8 @@ const sampleBooks = [
     "title": "h",
     "link": "",
     "content": "h",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "c7739d0f-1725-4b80-8fc5-2963497f0caf",
@@ -249,7 +269,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "548cf9d2-8cd0-4cfc-8df7-badc2480dabe",
@@ -261,7 +282,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "17473851585425345",
@@ -273,7 +295,8 @@ const sampleBooks = [
     "title": "Tiểu thuyết của Nguyễn Nhật Ánh về tuổi thơ miền quê",
     "link": "",
     "content": "Tác phẩm kể về tuổi thơ yên bình, trong sáng và đầy cảm xúc của hai anh em ở một làng quê miền Trung. Những mâu thuẫn, ghen tị, yêu thương đều hòa quyện trong bối cảnh làng quê đầy chất thơ.",
-    "description": "Tiểu thuyết về tuổi thơ miền quê Việt Nam"
+    "description": "Tiểu thuyết về tuổi thơ miền quê Việt Nam",
+    "readCount": 0
   },
   {
     "id": "17473851585378994",
@@ -285,7 +308,8 @@ const sampleBooks = [
     "title": "Cuốn tiểu thuyết triết lý của Paulo Coelho về hành trình tìm kiếm vận mệnh",
     "link": "",
     "content": "Chàng chăn cừu Santiago từ Tây Ban Nha bắt đầu hành trình theo đuổi giấc mơ tìm kho báu và khám phá ra vận mệnh của chính mình. Anh học được Ngôn ngữ của Vũ trụ và sự khôn ngoan từ Nhà Giả Kim.",
-    "description": "Tiểu thuyết về hành trình tìm kiếm vận mệnh cá nhân"
+    "description": "Tiểu thuyết về hành trình tìm kiếm vận mệnh cá nhân",
+    "readCount": 0
   },
   {
     "id": "eb61c309-6d2d-4b2b-b560-bf166c3db49a",
@@ -297,7 +321,8 @@ const sampleBooks = [
     "title": "s",
     "link": "",
     "content": "s",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "b735ec9c-55f0-4ab6-82e9-b495234b2c65",
@@ -309,7 +334,8 @@ const sampleBooks = [
     "title": "q",
     "link": "",
     "content": "q",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "e720f689-9473-4e90-92d6-83f80fc6a4bb",
@@ -321,7 +347,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "17473851585323404",
@@ -333,7 +360,8 @@ const sampleBooks = [
     "title": "Tác phẩm thơ lục bát kinh điển của đại thi hào Nguyễn Du",
     "link": "",
     "content": "Trăm năm trong cõi người ta,\nChữ tài chữ mệnh khéo là ghét nhau.\nTrải qua một cuộc bể dâu,\nNhững điều trông thấy mà đau đớn lòng.",
-    "description": "Kiệt tác thơ lục bát Việt Nam"
+    "description": "Kiệt tác thơ lục bát Việt Nam",
+    "readCount": 0
   },
   {
     "id": "123421945",
@@ -345,7 +373,8 @@ const sampleBooks = [
     "title": "Những lời đề tựa giới thiệu ở cuốn sách cũng không thể nào giúp chúng ta cảm nhận được hết trí tưởng tượng và thông điệp của nó. ",
     "link": "",
     "content": "Nội dung chi tiết sách...",
-    "description": "Giới thiệu ngắn gọn về sách"
+    "description": "Giới thiệu ngắn gọn về sách",
+    "readCount": 0
   },
   {
     "id": "2bf82ee6-a88e-4b35-b129-8fd3fb2f6700",
@@ -357,7 +386,8 @@ const sampleBooks = [
     "title": "b",
     "link": "",
     "content": "bb",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "7884c8bf-296f-4d09-ab3a-d20cf9943295",
@@ -369,7 +399,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "7df437f0-6d1e-411e-9cd5-a3bb0c9dabdd",
@@ -381,7 +412,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "1234523121234523126789",
@@ -393,7 +425,8 @@ const sampleBooks = [
     "title": "Sách khoa học thú vị",
     "link": "",
     "content": "Nội dung chi tiết sách.",
-    "description": "Giới thiệu ngắn gọn về sách"
+    "description": "Giới thiệu ngắn gọn về sách",
+    "readCount": 0
   },
   {
     "id": "94038c83-fcec-4125-958b-4a8b2bff0a9b",
@@ -405,7 +438,8 @@ const sampleBooks = [
     "title": "12",
     "link": "",
     "content": "324",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "c150a272-382e-4fe5-8e7c-519b436774b8",
@@ -417,7 +451,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "a",
-    "description": ""
+    "description": "",
+    "readCount": 0
   },
   {
     "id": "857e657a-f28f-4725-b7e4-7fe1813ec26e",
@@ -429,7 +464,8 @@ const sampleBooks = [
     "title": "a",
     "link": "",
     "content": "ac",
-    "description": ""
+    "description": "",
+    "readCount": 0
   }
 ];
 

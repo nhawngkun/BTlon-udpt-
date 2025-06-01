@@ -42,7 +42,8 @@ const addBook = async (req, res) => {
                 content: $content, 
                 description: $description, 
                 author: $actualAuthor,
-                createdAt: timestamp()
+                createdAt: timestamp(),
+                readCount: 0
             }) RETURN b`,
             { id, name, actualLang, actualCategory, image, title, link, content, description, actualAuthor }
         )
