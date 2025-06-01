@@ -6,7 +6,7 @@ import neo4j from 'neo4j-driver';
 config({ path: '../Config/config.env' });
 
 const URI = process.env.NEO4J_URI;
-const USER = process.env.NEO4J_USERNAME;
+const USER = process.env.NEO4J_USER || process.env.NEO4J_USERNAME;
 const PASSWORD = process.env.NEO4J_PASSWORD;
 
 async function testConnection() {
