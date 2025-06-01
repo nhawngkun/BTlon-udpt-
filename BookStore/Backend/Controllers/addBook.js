@@ -7,9 +7,7 @@ const addBook = async (req, res) => {
         const id = uuidv4()
         const { name, lang, category, image, title, link, content, description, author } = req.body
 
-        // LƯU Ý: Chức năng này chỉ thêm sách vào Neo4j.
-        // Nếu muốn cập nhật file sampleBooks.js, bạn cần ấn nút "Xuất sách vào file sampleBooks" 
-        // Nếu muốn đồng bộ dữ liệu từ file sampleBooks.js lên Neo4j, bạn cần ấn nút "Đồng bộ file lên Neo4j"
+        // Chỉ thêm sách vào Neo4j
         const result = await session.run(
             `CREATE (b:Book {
                 id: $id, name: $name, lang: $lang, category: $category,
@@ -20,9 +18,17 @@ const addBook = async (req, res) => {
         )
 
         const book = result.records[0].get('b').properties
-        res.status(200).json({ message: "Sách đã được thêm thành công vào Neo4j", data: book })
+        res.status(200).json({ 
+            success: true,
+            message: "Thêm sách thành công", 
+            data: book 
+        })
     } catch (error) {
-        res.status(500).json({ message: error.message })
+        console.error("Lỗi khi thêm sách:", error);
+        res.status(500).json({ 
+            success: false,
+            message: `Lỗi khi thêm sách: ${error.message}` 
+        })
     } finally {
         await session.close()
     }

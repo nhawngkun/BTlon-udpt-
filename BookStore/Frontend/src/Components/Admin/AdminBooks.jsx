@@ -91,14 +91,18 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
-        await axios.post(`${API_URL}/book/add`, updatedData);
-        toast.success('Thêm sách mới thành công');
+        // Thêm sách mới
+        const response = await axios.post(`${API_URL}/book/add`, updatedData);
         
-        // Sau khi thêm sách thành công, gọi API cập nhật sampleBooks.js
-        await axios.post(`${API_URL}/admin/seed-books`);
-        
-        // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
-        setShowSyncConfirm(true);
+        if (response.data && response.data.message) {
+          toast.success('Thêm sách mới thành công');
+          
+          // Cập nhật danh sách sách
+          fetchBooks();
+          
+          // Đặt lại form
+          resetForm();
+        }
       }
     } catch (error) {
       console.error('Error saving book:', error);
