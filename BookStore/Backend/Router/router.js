@@ -11,7 +11,14 @@ import addBook from '../Controllers/addBook.js';
 import getBook from '../Controllers/getBook.js';
 import readBook from '../Controllers/readBook.js';
 import searchBook from '../Controllers/searchBook.js';
-import { getAllUsers, getStats, deleteUser, runSeedBooks, syncBooksNeo4j, connectBookRelationships } from '../Controllers/adminControllers.js';
+import {
+  getAllUsers,
+  getStats,
+  deleteUser,
+  runSeedBooks,
+  syncBooksNeo4j,
+  connectBookRelationships // Đảm bảo hàm này được export đúng trong adminControllers.js
+} from '../Controllers/adminControllers.js';
 import authMiddleware from '../Middleware/authMiddleware.js';
 
 
