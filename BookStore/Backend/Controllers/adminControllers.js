@@ -120,81 +120,89 @@ export const connectBookRelationships = async (req, res) => {
   try {
     const { bookId, author, category } = req.body;
     
-    if (!bookId || !author || !category) {
+    console.log(`[INFO] Nhận yêu cầu kết nối quan hệ:`, { bookId, author, category });
+    
+    // Kiểm tra và xử lý dữ liệu đầu vào
+    if (!bookId) {
       return res.status(400).json({
         success: false,
-        message: "Thiếu thông tin: bookId, author và category là bắt buộc"
+        message: "Thiếu thông tin: bookId là bắt buộc"
       });
     }
     
-    console.log(`[LOG] Đang kết nối sách ID=${bookId} với tác giả "${author}" và thể loại "${category}"`);
+    // Đảm bảo có giá trị mặc định cho tác giả và thể loại
+    const actualAuthor = author || 'Unknown Author';
+    const actualCategory = category || 'General';
     
-    // Bước 0: Kiểm tra sách có tồn tại không
+    console.log(`[LOG] Bắt đầu kết nối sách ID=${bookId} với tác giả="${actualAuthor}" và thể loại="${actualCategory}"`);
+    
+    // KIỂM TRA BƯỚC 0: Kiểm tra sự tồn tại của sách
+    console.log("[LOG] Kiểm tra sự tồn tại của sách...");
     const bookCheckResult = await session.run(
       `MATCH (b:Book {id: $bookId}) RETURN b`,
       { bookId }
     );
     
     if (bookCheckResult.records.length === 0) {
-      console.error(`[ERROR] Không tìm thấy sách với ID=${bookId}`);
+      console.error(`[ERROR] ❌ Không tìm thấy sách với ID=${bookId}`);
       return res.status(404).json({
         success: false,
-        message: `Không tìm thấy sách với ID=${bookId}`
+        message: `Không tìm thấy sách với ID: ${bookId}`
       });
     }
     
-    // 1. Tạo hoặc tìm node Author
-    console.log("[LOG] 1. Tạo/tìm node Author...");
-    await session.run(
-      `MERGE (a:Author {name: $author}) RETURN a`,
-      { author }
-    );
+    console.log(`[LOG] ✓ Tìm thấy sách: ${bookCheckResult.records[0].get('b').properties.name}`);
     
-    // 2. Tạo hoặc tìm node Category
-    console.log("[LOG] 2. Tạo/tìm node Category...");
-    await session.run(
-      `MERGE (c:Category {name: $category}) RETURN c`,
-      { category }
-    );
-    
-    // 3. Nối Book với Author qua quan hệ WRITTEN_BY
-    console.log("[LOG] 3. Tạo quan hệ Book-Author...");
-    const authorRelResult = await session.run(
-      `MATCH (b:Book {id: $bookId})
-       MATCH (a:Author {name: $author})
-       MERGE (b)-[:WRITTEN_BY]->(a)
-       RETURN b, a`,
-      { bookId, author }
-    );
-    
-    if (authorRelResult.records.length === 0) {
-      throw new Error("Không thể tạo quan hệ với tác giả - kiểm tra lại dữ liệu");
+    try {
+      // 1. Tạo hoặc tìm node Author
+      console.log("[LOG] 1. Tạo/tìm node Author...");
+      await session.run(
+        `MERGE (a:Author {name: $actualAuthor}) RETURN a`,
+        { actualAuthor }
+      );
+      
+      // 2. Tạo hoặc tìm node Category
+      console.log("[LOG] 2. Tạo/tìm node Category...");
+      await session.run(
+        `MERGE (c:Category {name: $actualCategory}) RETURN c`,
+        { actualCategory }
+      );
+      
+      // 3. Nối Book với Author qua quan hệ WRITTEN_BY
+      console.log("[LOG] 3. Tạo quan hệ Book-Author...");
+      const authorRelResult = await session.run(
+        `MATCH (b:Book {id: $bookId})
+         MATCH (a:Author {name: $actualAuthor})
+         MERGE (b)-[:WRITTEN_BY]->(a)
+         RETURN b, a`,
+        { bookId, actualAuthor }
+      );
+      
+      // 4. Nối Book với Category qua quan hệ BELONGS_TO
+      console.log("[LOG] 4. Tạo quan hệ Book-Category...");
+      const categoryRelResult = await session.run(
+        `MATCH (b:Book {id: $bookId})
+         MATCH (c:Category {name: $actualCategory})
+         MERGE (b)-[:BELONGS_TO]->(c)
+         RETURN b, c`,
+        { bookId, actualCategory }
+      );
+      
+      console.log("[SUCCESS] ✅ Đã kết nối thành công sách với tác giả và thể loại");
+      
+      res.status(200).json({
+        success: true,
+        message: "Đã kết nối sách với tác giả và thể loại thành công",
+        relationships: {
+          bookId: bookId,
+          author: actualAuthor,
+          category: actualCategory
+        }
+      });
+    } catch (queryError) {
+      console.error("[ERROR] ❌ Lỗi khi thực hiện truy vấn Neo4j:", queryError);
+      throw new Error(`Lỗi khi tạo quan hệ: ${queryError.message}`);
     }
-    
-    // 4. Nối Book với Category qua quan hệ BELONGS_TO
-    console.log("[LOG] 4. Tạo quan hệ Book-Category...");
-    const categoryRelResult = await session.run(
-      `MATCH (b:Book {id: $bookId})
-       MATCH (c:Category {name: $category})
-       MERGE (b)-[:BELONGS_TO]->(c)
-       RETURN b, c`,
-      { bookId, category }
-    );
-    
-    if (categoryRelResult.records.length === 0) {
-      throw new Error("Không thể tạo quan hệ với thể loại - kiểm tra lại dữ liệu");
-    }
-    
-    console.log("[SUCCESS] ✅ Đã kết nối thành công sách với tác giả và thể loại");
-    
-    res.status(200).json({
-      success: true,
-      message: "Đã kết nối sách với tác giả và thể loại thành công",
-      relationships: {
-        author: author,
-        category: category
-      }
-    });
   } catch (error) {
     console.error("[ERROR] ❌ Lỗi khi kết nối quan hệ:", error);
     res.status(500).json({ 

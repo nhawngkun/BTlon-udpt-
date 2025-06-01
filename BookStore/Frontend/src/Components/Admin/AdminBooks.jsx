@@ -92,46 +92,57 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
-        // BƯỚC 1: Thêm sách mới vào Neo4j
-        console.log("Bước 1: Thêm sách vào Neo4j với dữ liệu:", updatedData);
+        // BƯỚC 1: Thêm sách mới vào Neo4j và log chi tiết hơn
+        console.log("🔄 BƯỚC 1: Thêm sách mới", {
+          tên: updatedData.name,
+          tácGiả: updatedData.author,
+          thểLoại: updatedData.category
+        });
+        
         const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
         
         if (!addResponse.data.success) {
-          throw new Error(`Thêm sách thất bại: ${addResponse.data.message}`);
+          throw new Error(`⛔ Thêm sách thất bại: ${addResponse.data.message}`);
         }
         
         const newBookId = addResponse.data.data.id;
-        console.log(`Sách đã được thêm với ID: ${newBookId}`);
+        console.log(`✅ Sách đã được thêm thành công với ID: ${newBookId}`);
         
-        // BƯỚC 2: Tạo các mối quan hệ cho sách
-        console.log(`Bước 2: Tạo quan hệ cho sách ID=${newBookId} với tác giả="${updatedData.author}" và thể loại="${updatedData.category}"`);
+        // BƯỚC 2: Tạo quan hệ với tác giả và thể loại
+        console.log(`🔄 BƯỚC 2: Tạo quan hệ cho sách ID=${newBookId}`);
         const connectData = {
           bookId: newBookId,
-          author: updatedData.author || 'Unknown Author',
-          category: updatedData.category || 'General'
+          author: updatedData.author,
+          category: updatedData.category
         };
         
-        try {
-          const relationshipResponse = await axios.post(`${API_URL}/admin/connect-book-relationships`, connectData);
-          console.log("Kết quả tạo quan hệ:", relationshipResponse.data);
-          
-          if (!relationshipResponse.data.success) {
-            console.error("Lỗi khi tạo quan hệ:", relationshipResponse.data.message);
-            toast.error(`Sách đã được thêm nhưng không thể liên kết: ${relationshipResponse.data.message}`);
-          } else {
-            toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
-          }
-        } catch (relationshipError) {
-          console.error("Lỗi gọi API tạo quan hệ:", relationshipError);
-          toast.error('Sách đã được thêm nhưng không thể liên kết với tác giả và thể loại. Vui lòng kiểm tra console để biết thêm chi tiết.');
-        }
+        // Thiết lập timeout dài hơn để tránh lỗi mạng 
+        const relationshipResponse = await axios.post(
+          `${API_URL}/admin/connect-book-relationships`, 
+          connectData,
+          { timeout: 10000 } // Tăng timeout lên 10 giây
+        );
         
+        console.log("✅ Kết quả tạo quan hệ:", relationshipResponse.data);
+        
+        toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
         fetchBooks();
         resetForm();
       }
     } catch (error) {
-      console.error('Error saving book:', error);
-      toast.error('Lỗi khi lưu sách: ' + (error.response?.data?.message || error.message));
+      console.error('❌ LỖI:', error);
+      
+      // Hiển thị thông báo lỗi chi tiết hơn
+      if (error.response) {
+        // Lỗi từ phía server
+        toast.error(`Lỗi (${error.response.status}): ${error.response.data.message || 'Không thể xử lý yêu cầu'}`);
+      } else if (error.request) {
+        // Không nhận được phản hồi
+        toast.error('Không nhận được phản hồi từ server. Vui lòng kiểm tra kết nối.');
+      } else {
+        // Lỗi khác
+        toast.error(`Lỗi: ${error.message}`);
+      }
     } finally {
       setLoading(false);
     }
