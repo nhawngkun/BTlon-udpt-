@@ -140,9 +140,6 @@ const ReadBook = () => {
                             <span className="px-3 py-1 bg-gray-500 text-white rounded-full text-sm">
                                 {book.lang}
                             </span>
-                            <span className="px-3 py-1 bg-green-500 text-white rounded-full text-sm">
-                                Lượt đọc: {book.readCount || 0}
-                            </span>
                         </div>
                         <p className="text-lg mb-6">{book.title}</p>
                         {book.description && (

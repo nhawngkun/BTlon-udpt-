@@ -82,60 +82,27 @@ const AdminBooks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      // formData.image đã chứa base64 hoặc URL trực tiếp
       const updatedData = { ...formData };
       
       if (isEditing) {
-        // Xử lý chỉnh sửa sách
         await axios.put(`${API_URL}/book/edit/${formData.id}`, updatedData);
         toast.success('Cập nhật sách thành công');
         fetchBooks();
         resetForm();
       } else {
-        // BƯỚC 1: Thêm sách mới vào Neo4j
-        const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
-        if (!addResponse.data.success) {
-          throw new Error(`⛔ Thêm sách thất bại: ${addResponse.data.message}`);
-        }
-        const newBookId = addResponse.data.data.id;
-
-        // BƯỚC 2: Luôn truyền author và category vừa nhập (có thể là mới)
-        const connectData = {
-          bookId: newBookId,
-          author: updatedData.author?.trim() || 'Unknown Author',
-          category: updatedData.category?.trim() || 'General'
-        };
-
-        const relationshipResponse = await axios.post(
-          `${API_URL}/admin/connect-book-relationships`,
-          connectData,
-          { timeout: 10000 }
-        );
-
-        if (!relationshipResponse.data.success) {
-          toast.error(`Sách đã được thêm nhưng không thể liên kết: ${relationshipResponse.data.message}`);
-        } else {
-          toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
-        }
-        fetchBooks();
-        resetForm();
+        await axios.post(`${API_URL}/book/add`, updatedData);
+        toast.success('Thêm sách mới thành công');
+        
+        // Sau khi thêm sách thành công, gọi API cập nhật sampleBooks.js
+        await axios.post(`${API_URL}/admin/seed-books`);
+        
+        // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
+        setShowSyncConfirm(true);
       }
     } catch (error) {
-      console.error('❌ LỖI:', error);
-      
-      // Hiển thị thông báo lỗi chi tiết hơn
-      if (error.response) {
-        // Lỗi từ phía server
-        toast.error(`Lỗi (${error.response.status}): ${error.response.data.message || 'Không thể xử lý yêu cầu'}`);
-      } else if (error.request) {
-        // Không nhận được phản hồi
-        toast.error('Không nhận được phản hồi từ server. Vui lòng kiểm tra kết nối.');
-      } else {
-        // Lỗi khác
-        toast.error(`Lỗi: ${error.message}`);
-      }
-    } finally {
-      setLoading(false);
+      console.error('Error saving book:', error);
+      toast.error('Lỗi khi lưu sách');
     }
   };
 
@@ -189,6 +156,24 @@ const AdminBooks = () => {
     setImagePreview("");
     setIsEditing(false);
     setShowForm(false);
+  };
+
+  const handleSyncConfirm = async () => {
+    setShowSyncConfirm(false);
+    try {
+      await axios.post(`${API_URL}/admin/sync-books`);
+      toast.success('Đồng bộ dữ liệu thành công');
+      fetchBooks();
+    } catch (error) {
+      console.error('Error syncing books:', error);
+      toast.error('Lỗi khi đồng bộ dữ liệu');
+    }
+  };
+
+  const handleSyncCancel = () => {
+    setShowSyncConfirm(false);
+    fetchBooks();
+    resetForm();
   };
 
   if (loading) {
@@ -420,6 +405,31 @@ const AdminBooks = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Thêm dialog xác nhận đồng bộ */}
+      {showSyncConfirm && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 w-96 text-center">
+            <h2 className="text-xl font-bold mb-4">Xác nhận đồng bộ dữ liệu</h2>
+            <p className="mb-2">Sách đã được thêm và file đã được cập nhật.</p>
+            <p>Bạn có muốn đồng bộ dữ liệu lên Neo4j không?</p>
+            <div className="flex justify-center gap-4 mt-6">
+              <button
+                onClick={handleSyncCancel}
+                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
+              >
+                Không
+              </button>
+              <button
+                onClick={handleSyncConfirm}
+                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
+              >
+                Có
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

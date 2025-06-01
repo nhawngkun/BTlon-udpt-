@@ -12,17 +12,7 @@ const RecentBooks = () => {
       try {
         setLoading(true);
         const response = await axios.get(`${API_URL}/books`);
-        
-        // Lấy tất cả sách và sắp xếp theo ID (giả định ID mới nhất có giá trị cao nhất)
-        const sortedBooks = [...response.data].sort((a, b) => {
-          // Nếu ID là UUID, dùng thời điểm thêm vào mảng làm cơ sở sắp xếp
-          return b.id.localeCompare(a.id);
-        });
-        
-        // Lấy 10 sách mới nhất
-        const latestBooks = sortedBooks.slice(0, 10);
-        
-        setBooks(latestBooks);
+        setBooks(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Lỗi khi lấy dữ liệu sách:', error);
@@ -36,6 +26,11 @@ const RecentBooks = () => {
   // Phân loại sách theo danh mục để hiển thị
   const getBooksByCategory = (category) => {
     return books.filter(book => book.category === category).slice(0, 4);
+  };
+
+  // Lấy tất cả sách và giới hạn số lượng để hiển thị
+  const getAllBooks = () => {
+    return books.slice(0, 8);
   };
 
   if (loading) {
@@ -54,10 +49,10 @@ const RecentBooks = () => {
       
       <div className="mb-12">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-semibold">10 sách mới nhất</h3>
+          <h3 className="text-xl font-semibold">Sách mới nhất</h3>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          {books.map(book => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {getAllBooks().map(book => (
             <Card key={book.id} item={book} />
           ))}
         </div>
