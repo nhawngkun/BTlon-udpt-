@@ -82,7 +82,6 @@ const AdminBooks = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
       // formData.image đã chứa base64 hoặc URL trực tiếp
       const updatedData = { ...formData };
       
@@ -92,28 +91,18 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
-        // Thêm sách mới
-        const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
+        await axios.post(`${API_URL}/book/add`, updatedData);
         toast.success('Thêm sách mới thành công');
-        console.log("Book added response:", addResponse.data);
         
-        try {
-          // Cập nhật file sampleBooks.js
-          const seedResponse = await axios.post(`${API_URL}/admin/seed-books`);
-          console.log("Seed response:", seedResponse.data);
-          
-          // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
-          setShowSyncConfirm(true);
-        } catch (syncError) {
-          //console.error("Error during sync process:", syncError);
-          // Không hiển thị thông báo lỗi
-        }
+        // Sau khi thêm sách thành công, gọi API cập nhật sampleBooks.js
+        await axios.post(`${API_URL}/admin/seed-books`);
+        
+        // Hiển thị dialog xác nhận chạy syncBooksNeo4jFull
+        setShowSyncConfirm(true);
       }
     } catch (error) {
-      //console.error('Error saving book:', error);
-      // Không hiển thị thông báo lỗi
-    } finally {
-      setLoading(false);
+      console.error('Error saving book:', error);
+      toast.error('Lỗi khi lưu sách');
     }
   };
 
@@ -127,8 +116,8 @@ const AdminBooks = () => {
       toast.success('Xóa sách thành công');
       fetchBooks();
     } catch (error) {
-      //console.error('Error deleting book:', error);
-      // Không hiển thị thông báo lỗi
+      console.error('Error deleting book:', error);
+      toast.error('Lỗi khi xóa sách');
     }
   };
 
@@ -171,18 +160,13 @@ const AdminBooks = () => {
 
   const handleSyncConfirm = async () => {
     setShowSyncConfirm(false);
-    setLoading(true);
     try {
-      const syncResponse = await axios.post(`${API_URL}/admin/sync-books`);
-      console.log("Sync response:", syncResponse.data);
+      await axios.post(`${API_URL}/admin/sync-books`);
       toast.success('Đồng bộ dữ liệu thành công');
       fetchBooks();
-      resetForm();
     } catch (error) {
       console.error('Error syncing books:', error);
-      // Không hiển thị thông báo lỗi
-    } finally {
-      setLoading(false);
+      toast.error('Lỗi khi đồng bộ dữ liệu');
     }
   };
 
@@ -451,4 +435,3 @@ const AdminBooks = () => {
 };
 
 export default AdminBooks;
-// Đã đảm bảo: khi thêm sách mới sẽ gửi đủ thông tin lên backend, backend sẽ tự động liên kết sách với tác giả và thể loại
