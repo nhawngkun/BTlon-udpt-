@@ -51,7 +51,7 @@ const addBook = async (req, res) => {
 
         res.status(200).json({ 
             success: true,
-            message: "Thêm sách thành công và tạo mối quan hệ với tác giả và thể loại", 
+            message: "Thêm sách thành công", 
             data: book 
         })
     } catch (error) {
