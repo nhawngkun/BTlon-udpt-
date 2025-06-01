@@ -92,24 +92,26 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
-        // Thêm sách mới
+        // BƯỚC 1: Thêm sách mới vào Neo4j
+        console.log("Bước 1: Thêm sách vào Neo4j");
         const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
         const newBookId = addResponse.data.data.id;
         
-        // Gọi API kết nối sách với tác giả và thể loại
+        // BƯỚC 2: Tạo các mối quan hệ cho sách
+        console.log("Bước 2: Tạo các mối quan hệ cho sách với tác giả và thể loại");
         await axios.post(`${API_URL}/admin/connect-book-relationships`, {
           bookId: newBookId,
           author: updatedData.author || 'Unknown Author',
           category: updatedData.category || 'General'
         });
         
-        toast.success('Thêm sách mới thành công');
+        toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
         fetchBooks();
         resetForm();
       }
     } catch (error) {
       console.error('Error saving book:', error);
-      toast.error('Lỗi khi lưu sách');
+      toast.error('Lỗi khi lưu sách: ' + (error.response?.data?.message || error.message));
     } finally {
       setLoading(false);
     }

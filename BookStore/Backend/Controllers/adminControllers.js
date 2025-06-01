@@ -114,26 +114,37 @@ export const runSeedBooks = (req, res) => {
   });
 };
 
-// API mới: Tự động tạo các quan hệ cho sách với tác giả và thể loại
+// API tạo các quan hệ cho sách với tác giả và thể loại
 export const connectBookRelationships = async (req, res) => {
   const session = driver.session();
   try {
     const { bookId, author, category } = req.body;
-    console.log(`Kết nối sách ID=${bookId} với tác giả "${author}" và thể loại "${category}"`);
+    
+    if (!bookId || !author || !category) {
+      return res.status(400).json({
+        success: false,
+        message: "Thiếu thông tin: bookId, author và category là bắt buộc"
+      });
+    }
+    
+    console.log(`Đang kết nối sách ID=${bookId} với tác giả "${author}" và thể loại "${category}"`);
     
     // 1. Tạo hoặc tìm node Author
+    console.log("1. Tạo/tìm node Author...");
     await session.run(
       `MERGE (a:Author {name: $author}) RETURN a`,
       { author }
     );
     
     // 2. Tạo hoặc tìm node Category
+    console.log("2. Tạo/tìm node Category...");
     await session.run(
       `MERGE (c:Category {name: $category}) RETURN c`,
       { category }
     );
     
     // 3. Nối Book với Author qua quan hệ WRITTEN_BY
+    console.log("3. Tạo quan hệ Book-Author...");
     await session.run(
       `MATCH (b:Book {id: $bookId}), (a:Author {name: $author})
        MERGE (b)-[:WRITTEN_BY]->(a)`,
@@ -141,18 +152,21 @@ export const connectBookRelationships = async (req, res) => {
     );
     
     // 4. Nối Book với Category qua quan hệ BELONGS_TO
+    console.log("4. Tạo quan hệ Book-Category...");
     await session.run(
       `MATCH (b:Book {id: $bookId}), (c:Category {name: $category})
        MERGE (b)-[:BELONGS_TO]->(c)`,
       { bookId, category }
     );
     
+    console.log("✅ Đã kết nối thành công sách với tác giả và thể loại");
+    
     res.status(200).json({
       success: true,
       message: "Đã kết nối sách với tác giả và thể loại thành công"
     });
   } catch (error) {
-    console.error("Lỗi khi kết nối quan hệ:", error);
+    console.error("❌ Lỗi khi kết nối quan hệ:", error);
     res.status(500).json({ 
       success: false,
       message: `Lỗi khi kết nối sách với tác giả và thể loại: ${error.message}`
