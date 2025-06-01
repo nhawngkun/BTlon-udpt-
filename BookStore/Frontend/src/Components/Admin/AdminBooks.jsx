@@ -110,32 +110,22 @@ const AdminBooks = () => {
         
         // BƯỚC 2: Tạo quan hệ với tác giả và thể loại
         console.log(`🔄 BƯỚC 2: Tạo quan hệ cho sách ID=${newBookId}`);
-        try {
-          const connectData = {
-            bookId: newBookId,
-            author: updatedData.author,
-            category: updatedData.category
-          };
-          
-          // Thiết lập timeout dài hơn để tránh lỗi mạng 
-          const relationshipResponse = await axios.post(
-            `${API_URL}/admin/connect-book-relationships`, 
-            connectData,
-            { timeout: 15000 } // Tăng timeout lên 15 giây
-          );
-          
-          if (relationshipResponse.data.success) {
-            console.log("✅ Kết quả tạo quan hệ:", relationshipResponse.data);
-            toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
-          } else {
-            console.warn("⚠️ Tạo quan hệ không thành công:", relationshipResponse.data);
-            toast.warning('Sách đã được thêm nhưng có vấn đề khi liên kết với tác giả/thể loại');
-          }
-        } catch (relationshipError) {
-          console.error("❌ Lỗi khi tạo quan hệ:", relationshipError);
-          toast.warning('Sách đã được thêm nhưng không thể liên kết với tác giả/thể loại');
-        }
+        const connectData = {
+          bookId: newBookId,
+          author: updatedData.author,
+          category: updatedData.category
+        };
         
+        // Thiết lập timeout dài hơn để tránh lỗi mạng 
+        const relationshipResponse = await axios.post(
+          `${API_URL}/admin/connect-book-relationships`, 
+          connectData,
+          { timeout: 10000 } // Tăng timeout lên 10 giây
+        );
+        
+        console.log("✅ Kết quả tạo quan hệ:", relationshipResponse.data);
+        
+        toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
         fetchBooks();
         resetForm();
       }
@@ -208,24 +198,6 @@ const AdminBooks = () => {
     setImagePreview("");
     setIsEditing(false);
     setShowForm(false);
-  };
-
-  const handleSyncConfirm = async () => {
-    setShowSyncConfirm(false);
-    try {
-      await axios.post(`${API_URL}/admin/sync-books`);
-      toast.success('Đồng bộ dữ liệu thành công');
-      fetchBooks();
-    } catch (error) {
-      console.error('Error syncing books:', error);
-      toast.error('Lỗi khi đồng bộ dữ liệu');
-    }
-  };
-
-  const handleSyncCancel = () => {
-    setShowSyncConfirm(false);
-    fetchBooks();
-    resetForm();
   };
 
   if (loading) {
@@ -457,31 +429,6 @@ const AdminBooks = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Thêm dialog xác nhận đồng bộ */}
-      {showSyncConfirm && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 w-96 text-center">
-            <h2 className="text-xl font-bold mb-4">Xác nhận đồng bộ dữ liệu</h2>
-            <p className="mb-2">Sách đã được thêm và file đã được cập nhật.</p>
-            <p>Bạn có muốn đồng bộ dữ liệu lên Neo4j không?</p>
-            <div className="flex justify-center gap-4 mt-6">
-              <button
-                onClick={handleSyncCancel}
-                className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
-              >
-                Không
-              </button>
-              <button
-                onClick={handleSyncConfirm}
-                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-2 rounded"
-              >
-                Có
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
