@@ -38,7 +38,7 @@ const createAdminUser = async () => {
         address: "BookStore HQ",
         dob: "01-01-2000",
         phone: "0987654321",
-        role: "Admin",
+        role: "admin", // Sửa thành chữ thường
         books: "0"
       }) RETURN u`,
       { id, hashedPassword }

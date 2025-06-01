@@ -23,7 +23,7 @@ const UserModel = {
             address: "India",
             dob: "01-01-2000",
             phone: "1234567890",
-            role: "Book Reader",
+            role: "Book Reader", // Nếu tạo admin thì để "admin"
             books: "0"
         };
 
