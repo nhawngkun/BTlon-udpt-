@@ -1,38 +1,26 @@
 const sampleBooks = [
   {
-    "id": "123453249",
-    "name": "Sách hoạt hình",
+    "id": "123456789",
+    "name": "Thế Giới Atlantis",
     "author": "Tác giả A",
     "lang": "Vietnamese",
     "category": "Science",
-    "image": "https://link1.jpg",
-    "title": "Sách khoa học",
+    "image": "https://sachtiengviet.com/cdn/shop/products/456a739f8ba25abcc0df9f7948ea67c5.jpg?v=1701972138",
+    "title": "Sách khoa học viễn tưởng cực hay",
     "link": "",
-    "content": "Nội dung chi tiết sách.",
+    "content": "Nội dung chi tiết sách...",
     "description": "Giới thiệu ngắn gọn về sách"
   },
   {
-    "id": "17473851585112",
-    "name": "Tắt Đèn",
-    "author": "Tác giả A",
+    "id": "754ba0b2-3048-47e3-9387-2fb6b96e6438",
+    "name": "yy",
+    "author": "Nam Cao",
     "lang": "Vietnamese",
     "category": "literary",
-    "image": "https://cdn1.fahasa.com/media/flashmagazine/images/page_images/tat_den_tai_ban_2022/2022_06_27_11_52_02_1-390x510.jpg",
-    "title": "Tắt Đèn (Tái Bản) là một trong những tác phẩm văn học tiêu biểu nhất của nhà văn Ngô Tất Tố (tiểu thuyết, in trên báo Việt nữ năm 1937).",
+    "image": "blob:https://bookstoreudpt.vercel.app/14ff87ce-fa83-4ac1-8d1e-f2287c749cb8",
+    "title": "h",
     "link": "",
-    "content": "Trăm năm trong cõi người ta,\nChữ tài chữ mệnh khéo là ghét nhau.\nTrải qua một cuộc bể dâu,\nNhững điều trông thấy mà đau đớn lòng.",
-    "description": "Kiệt tác thơ lục bát Việt Nam"
-  },
-  {
-    "id": "1ffcac2b-63fc-41d1-af51-58834e0ca732",
-    "name": "Bông Cúc Trắng",
-    "author": "Thi Thi",
-    "lang": "Vietnamese",
-    "category": "Cổ tích",
-    "image": "blob:https://bookstoreudpt.vercel.app/a9efd69f-f0f1-4927-a523-997cbbbad9cc",
-    "title": "a",
-    "link": "",
-    "content": "aa",
+    "content": "h",
     "description": ""
   },
   {
@@ -48,6 +36,18 @@ const sampleBooks = [
     "description": ""
   },
   {
+    "id": "17473851585323404",
+    "name": "Truyện Kiều",
+    "author": "Tác giả C",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "https://cdn1.fahasa.com/media/flashmagazine/images/page_images/truyen_kieu/2021_09_08_08_30_55_1-390x510.jpg",
+    "title": "Tác phẩm thơ lục bát kinh điển của đại thi hào Nguyễn Du",
+    "link": "",
+    "content": "Trăm năm trong cõi người ta,\nChữ tài chữ mệnh khéo là ghét nhau.\nTrải qua một cuộc bể dâu,\nNhững điều trông thấy mà đau đớn lòng.",
+    "description": "Kiệt tác thơ lục bát Việt Nam"
+  },
+  {
     "id": "2bf82ee6-a88e-4b35-b129-8fd3fb2f6700",
     "name": "Tấm Cám",
     "author": "Thi Thi",
@@ -57,30 +57,6 @@ const sampleBooks = [
     "title": "b",
     "link": "",
     "content": "bb",
-    "description": ""
-  },
-  {
-    "id": "123456789",
-    "name": "Thế Giới Atlantis",
-    "author": "Tác giả A",
-    "lang": "Vietnamese",
-    "category": "Science",
-    "image": "https://sachtiengviet.com/cdn/shop/products/456a739f8ba25abcc0df9f7948ea67c5.jpg?v=1701972138",
-    "title": "Sách khoa học viễn tưởng cực hay",
-    "link": "",
-    "content": "Nội dung chi tiết sách...",
-    "description": "Giới thiệu ngắn gọn về sách"
-  },
-  {
-    "id": "94038c83-fcec-4125-958b-4a8b2bff0a9b",
-    "name": "Sọ dừa",
-    "author": "Thi Thi",
-    "lang": "Vietnamese",
-    "category": "Cổ tích",
-    "image": "blob:https://bookstoreudpt.vercel.app/fda913e5-3d81-4818-9ae4-ea9aa9cc203f",
-    "title": "12",
-    "link": "",
-    "content": "324",
     "description": ""
   },
   {
@@ -96,28 +72,112 @@ const sampleBooks = [
     "description": "Giới thiệu ngắn gọn về sách"
   },
   {
-    "id": "17473851585378994",
-    "name": "Nhà Giả Kim",
-    "author": "Tác giả C",
+    "id": "b735ec9c-55f0-4ab6-82e9-b495234b2c65",
+    "name": "LA",
+    "author": "Thi Thi",
     "lang": "Vietnamese",
-    "category": "Novel",
-    "image": "https://phatphapungdung.com/sach-noi/wp-content/uploads/2019/10/Nha-gia-kim.jpg",
-    "title": "Cuốn tiểu thuyết triết lý của Paulo Coelho về hành trình tìm kiếm vận mệnh",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/56a6ddf7-b8b3-4e7d-8a61-ad424fb2da50",
+    "title": "q",
     "link": "",
-    "content": "Chàng chăn cừu Santiago từ Tây Ban Nha bắt đầu hành trình theo đuổi giấc mơ tìm kho báu và khám phá ra vận mệnh của chính mình. Anh học được Ngôn ngữ của Vũ trụ và sự khôn ngoan từ Nhà Giả Kim.",
-    "description": "Tiểu thuyết về hành trình tìm kiếm vận mệnh cá nhân"
+    "content": "q",
+    "description": ""
   },
   {
-    "id": "17473851585425345",
-    "name": "Tôi Thấy Hoa Vàng Trên Cỏ Xanh",
-    "author": "Tác giả B",
+    "id": "17473851585171812",
+    "name": "Dế Mèn Phiêu Lưu Ký",
+    "author": "Tác giả C",
     "lang": "Vietnamese",
-    "category": "Novel",
-    "image": "https://isach.info/images/story/cover/toi_thay_hoa_vang_tren_co_xanh__nguyen_nhat_anh.jpg",
-    "title": "Tiểu thuyết của Nguyễn Nhật Ánh về tuổi thơ miền quê",
+    "category": "Fiction",
+    "image": "https://link3.jpg",
+    "title": "Tác phẩm kinh điển của Tô Hoài",
     "link": "",
-    "content": "Tác phẩm kể về tuổi thơ yên bình, trong sáng và đầy cảm xúc của hai anh em ở một làng quê miền Trung. Những mâu thuẫn, ghen tị, yêu thương đều hòa quyện trong bối cảnh làng quê đầy chất thơ.",
-    "description": "Tiểu thuyết về tuổi thơ miền quê Việt Nam"
+    "content": "Dế Mèn Phiêu Lưu Ký là tác phẩm nổi tiếng.",
+    "description": "Giới thiệu ngắn gọn về sách"
+  },
+  {
+    "id": "123453249",
+    "name": "Sách hoạt hình",
+    "author": "Tác giả A",
+    "lang": "Vietnamese",
+    "category": "Science",
+    "image": "blob:https://bookstoreudpt.vercel.app/f330b606-7244-4908-a403-d192d1f29c8c",
+    "title": "Sách khoa học",
+    "link": "",
+    "content": "Nội dung chi tiết sách.",
+    "description": "Giới thiệu ngắn gọn về sách"
+  },
+  {
+    "id": "1ffcac2b-63fc-41d1-af51-58834e0ca732",
+    "name": "Bông Cúc Trắng",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/a9efd69f-f0f1-4927-a523-997cbbbad9cc",
+    "title": "a",
+    "link": "",
+    "content": "aa",
+    "description": ""
+  },
+  {
+    "id": "dafe1d55-8e0b-4101-96a3-92abdffef50f",
+    "name": "cccc",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "blob:https://bookstoreudpt.vercel.app/062fd265-ca36-48bc-8d9e-b7ccf0d31cce",
+    "title": "s",
+    "link": "",
+    "content": "s",
+    "description": ""
+  },
+  {
+    "id": "dc349f3f-936e-4473-ac86-f2a841d62274",
+    "name": "trtr",
+    "author": "Nam Cao",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "blob:https://bookstoreudpt.vercel.app/945d64ca-fdf0-4cb8-8f93-5b7c7721b489",
+    "title": "Q",
+    "link": "",
+    "content": "Q",
+    "description": ""
+  },
+  {
+    "id": "1175c8bb-7773-4428-ac98-dd76bc9fc47e",
+    "name": "mimimimi",
+    "author": "Nam Cao",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "",
+    "title": "q",
+    "link": "",
+    "content": "q",
+    "description": ""
+  },
+  {
+    "id": "d6e81903-cdcf-4e59-8aae-0fbfb362c7ec",
+    "name": "hyhyhy",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/d408e03a-7335-4ee3-babf-d71e2ae044a5",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
+  },
+  {
+    "id": "ed06d329-9481-4b00-a4e1-93f17647748b",
+    "name": "lanh",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/4152500f-2866-405a-b7c4-c5af81d90f5b",
+    "title": "d",
+    "link": "",
+    "content": "d",
+    "description": ""
   },
   {
     "id": "17473851585551421",
@@ -132,13 +192,37 @@ const sampleBooks = [
     "description": "Sách khoa học phổ thông về vũ trụ và thời gian"
   },
   {
-    "id": "17473851585323404",
-    "name": "Truyện Kiều",
-    "author": "Tác giả C",
+    "id": "e720f689-9473-4e90-92d6-83f80fc6a4bb",
+    "name": "uuuu",
+    "author": "Nam Cao",
+    "lang": "Vietnamese",
+    "category": "Novel",
+    "image": "blob:https://bookstoreudpt.vercel.app/d408e03a-7335-4ee3-babf-d71e2ae044a5",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
+  },
+  {
+    "id": "17473851585425345",
+    "name": "Tôi Thấy Hoa Vàng Trên Cỏ Xanh",
+    "author": "Tác giả B",
+    "lang": "Vietnamese",
+    "category": "Novel",
+    "image": "https://isach.info/images/story/cover/toi_thay_hoa_vang_tren_co_xanh__nguyen_nhat_anh.jpg",
+    "title": "Tiểu thuyết của Nguyễn Nhật Ánh về tuổi thơ miền quê",
+    "link": "",
+    "content": "Tác phẩm kể về tuổi thơ yên bình, trong sáng và đầy cảm xúc của hai anh em ở một làng quê miền Trung. Những mâu thuẫn, ghen tị, yêu thương đều hòa quyện trong bối cảnh làng quê đầy chất thơ.",
+    "description": "Tiểu thuyết về tuổi thơ miền quê Việt Nam"
+  },
+  {
+    "id": "17473851585112",
+    "name": "Tắt Đèn",
+    "author": "Tác giả A",
     "lang": "Vietnamese",
     "category": "literary",
-    "image": "https://cdn1.fahasa.com/media/flashmagazine/images/page_images/truyen_kieu/2021_09_08_08_30_55_1-390x510.jpg",
-    "title": "Tác phẩm thơ lục bát kinh điển của đại thi hào Nguyễn Du",
+    "image": "https://cdn1.fahasa.com/media/flashmagazine/images/page_images/tat_den_tai_ban_2022/2022_06_27_11_52_02_1-390x510.jpg",
+    "title": "Tắt Đèn (Tái Bản) là một trong những tác phẩm văn học tiêu biểu nhất của nhà văn Ngô Tất Tố (tiểu thuyết, in trên báo Việt nữ năm 1937).",
     "link": "",
     "content": "Trăm năm trong cõi người ta,\nChữ tài chữ mệnh khéo là ghét nhau.\nTrải qua một cuộc bể dâu,\nNhững điều trông thấy mà đau đớn lòng.",
     "description": "Kiệt tác thơ lục bát Việt Nam"
@@ -156,18 +240,101 @@ const sampleBooks = [
     "description": "Giới thiệu ngắn gọn về sách"
   },
   {
-    "id": "17473851585171812",
-    "name": "Dế Mèn Phiêu Lưu Ký",
+    "id": "94038c83-fcec-4125-958b-4a8b2bff0a9b",
+    "name": "Sọ dừa",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/fda913e5-3d81-4818-9ae4-ea9aa9cc203f",
+    "title": "12",
+    "link": "",
+    "content": "324",
+    "description": ""
+  },
+  {
+    "id": "17473851585378994",
+    "name": "Nhà Giả Kim",
     "author": "Tác giả C",
     "lang": "Vietnamese",
-    "category": "Fiction",
-    "image": "https://link3.jpg",
-    "title": "Tác phẩm kinh điển của Tô Hoài",
+    "category": "Novel",
+    "image": "https://phatphapungdung.com/sach-noi/wp-content/uploads/2019/10/Nha-gia-kim.jpg",
+    "title": "Cuốn tiểu thuyết triết lý của Paulo Coelho về hành trình tìm kiếm vận mệnh",
     "link": "",
-    "content": "Dế Mèn Phiêu Lưu Ký là tác phẩm nổi tiếng.",
-    "description": "Giới thiệu ngắn gọn về sách"
+    "content": "Chàng chăn cừu Santiago từ Tây Ban Nha bắt đầu hành trình theo đuổi giấc mơ tìm kho báu và khám phá ra vận mệnh của chính mình. Anh học được Ngôn ngữ của Vũ trụ và sự khôn ngoan từ Nhà Giả Kim.",
+    "description": "Tiểu thuyết về hành trình tìm kiếm vận mệnh cá nhân"
+  },
+  {
+    "id": "eb61c309-6d2d-4b2b-b560-bf166c3db49a",
+    "name": "bbbbbbbbb",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "blob:https://bookstoreudpt.vercel.app/062fd265-ca36-48bc-8d9e-b7ccf0d31cce",
+    "title": "s",
+    "link": "",
+    "content": "s",
+    "description": ""
+  },
+  {
+    "id": "7df437f0-6d1e-411e-9cd5-a3bb0c9dabdd",
+    "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "blob:https://bookstoreudpt.vercel.app/e00634a6-86cb-4aaf-bd05-285a80d00317",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
+  },
+  {
+    "id": "c150a272-382e-4fe5-8e7c-519b436774b8",
+    "name": "lanhcute",
+    "author": "Nam Cao",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "blob:https://bookstoreudpt.vercel.app/9edfd97c-51c5-452a-b0f3-fcffcb8ce8e3",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
+  },
+  {
+    "id": "74a62fce-9e7a-4a8e-90f1-958f1e671d3b",
+    "name": "dddd",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Fiction",
+    "image": "blob:https://bookstoreudpt.vercel.app/062fd265-ca36-48bc-8d9e-b7ccf0d31cce",
+    "title": "s",
+    "link": "",
+    "content": "s",
+    "description": ""
+  },
+  {
+    "id": "c7207323-3b54-4f60-9a6c-b738c7529c41",
+    "name": "lokiki",
+    "author": "Nam Cao",
+    "lang": "Vietnamese",
+    "category": "literary",
+    "image": "blob:https://bookstoreudpt.vercel.app/f9d9ebe1-5759-4c25-bfeb-79e2cc73cb75",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
+  },
+  {
+    "id": "7884c8bf-296f-4d09-ab3a-d20cf9943295",
+    "name": "thắngdb",
+    "author": "Thi Thi",
+    "lang": "Vietnamese",
+    "category": "Cổ tích",
+    "image": "blob:https://bookstoreudpt.vercel.app/66ea99da-3684-4d34-9dbc-8f7297f38206",
+    "title": "a",
+    "link": "",
+    "content": "a",
+    "description": ""
   }
 ];
 
 export default sampleBooks;
-//

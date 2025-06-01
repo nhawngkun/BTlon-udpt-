@@ -14,13 +14,18 @@ const session = driver.session();
 async function syncBooksWithAuthors() {
   try {
     // Xóa sạch dữ liệu cũ
+    console.log('Xóa dữ liệu cũ...');
     await session.run('MATCH (b:Book) DETACH DELETE b');
     await session.run('MATCH (a:Author) DETACH DELETE a');
     await session.run('MATCH (c:Category) DETACH DELETE c');
-    console.log('Deleted all existing books and authors');
+    console.log('✅ Đã xóa sách, tác giả và thể loại cũ');
 
-    for (const book of sampleBooks) {
-      // Tạo node Book
+    console.log(`Bắt đầu đồng bộ ${sampleBooks.length} sách...`);
+    for (let i = 0; i < sampleBooks.length; i++) {
+      const book = sampleBooks[i];
+      console.log(`[${i+1}/${sampleBooks.length}] Đang xử lý sách: ${book.name}`);
+      
+      // 1. Tạo node Book
       await session.run(
         `CREATE (b:Book {
           id: $id,
@@ -36,32 +41,44 @@ async function syncBooksWithAuthors() {
         })`,
         book
       );
+      console.log(`  ✓ Đã tạo sách: ${book.name}`);
 
-      // Tạo hoặc tìm node Author
+      // 2. Tạo hoặc tìm node Author
       await session.run(
         `MERGE (a:Author {name: $author})`,
         { author: book.author }
       );
-       await session.run(`MERGE (c:Category {name: $category})`, { category: book.category });
+      console.log(`  ✓ Đã tạo/tìm tác giả: ${book.author}`);
+      
+      // 3. Tạo hoặc tìm node Category
+      await session.run(
+        `MERGE (c:Category {name: $category})`, 
+        { category: book.category }
+      );
+      console.log(`  ✓ Đã tạo/tìm thể loại: ${book.category}`);
 
-      // Nối Book với Author
+      // 4. Nối Book với Author qua quan hệ WRITTEN_BY
       await session.run(
         `MATCH (b:Book {id: $id}), (a:Author {name: $author})
          MERGE (b)-[:WRITTEN_BY]->(a)`,
         { id: book.id, author: book.author }
       );
+      console.log(`  ✓ Đã nối sách với tác giả: ${book.name} -> ${book.author}`);
+      
+      // 5. Nối Book với Category qua quan hệ BELONGS_TO
       await session.run(
         `MATCH (b:Book {id: $id}), (c:Category {name: $category})
          MERGE (b)-[:BELONGS_TO]->(c)`,
         { id: book.id, category: book.category }
       );
+      console.log(`  ✓ Đã nối sách với thể loại: ${book.name} -> ${book.category}`);
 
-      console.log(`Created book '${book.name}' and linked to author '${book.author}'`);
+      console.log(`✅ Hoàn thành xử lý sách: ${book.name}`);
     }
 
-    console.log('Finished syncing books with authors');
+    console.log('✅ Đã hoàn tất đồng bộ sách với tác giả và thể loại');
   } catch (error) {
-    console.error('Error syncing books with authors:', error);
+    console.error('❌ Lỗi khi đồng bộ dữ liệu:', error);
   } finally {
     await session.close();
     await driver.close();
