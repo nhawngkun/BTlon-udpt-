@@ -119,6 +119,10 @@ export const connectBookRelationships = async (req, res) => {
   const session = driver.session();
   try {
     const { bookId, author, category } = req.body;
+
+    // Đảm bảo luôn lấy giá trị mới nhất từ client
+    const actualAuthor = author?.trim() || 'Unknown Author';
+    const actualCategory = category?.trim() || 'General';
     
     console.log(`[INFO] Nhận yêu cầu kết nối quan hệ:`, { bookId, author, category });
     
@@ -129,10 +133,6 @@ export const connectBookRelationships = async (req, res) => {
         message: "Thiếu thông tin: bookId là bắt buộc"
       });
     }
-    
-    // Đảm bảo có giá trị mặc định cho tác giả và thể loại
-    const actualAuthor = author || 'Unknown Author';
-    const actualCategory = category || 'General';
     
     console.log(`[LOG] Bắt đầu kết nối sách ID=${bookId} với tác giả="${actualAuthor}" và thể loại="${actualCategory}"`);
     
@@ -154,21 +154,21 @@ export const connectBookRelationships = async (req, res) => {
     console.log(`[LOG] ✓ Tìm thấy sách: ${bookCheckResult.records[0].get('b').properties.name}`);
     
     try {
-      // 1. Tạo hoặc tìm node Author
+      // 1. Tạo hoặc tìm node Author (tên mới cũng sẽ được tạo)
       console.log("[LOG] 1. Tạo/tìm node Author...");
       await session.run(
         `MERGE (a:Author {name: $actualAuthor}) RETURN a`,
         { actualAuthor }
       );
       
-      // 2. Tạo hoặc tìm node Category
+      // 2. Tạo hoặc tìm node Category (tên mới cũng sẽ được tạo)
       console.log("[LOG] 2. Tạo/tìm node Category...");
       await session.run(
         `MERGE (c:Category {name: $actualCategory}) RETURN c`,
         { actualCategory }
       );
       
-      // 3. Nối Book với Author qua quan hệ WRITTEN_BY
+      // 3. Nối Book với Author
       console.log("[LOG] 3. Tạo quan hệ Book-Author...");
       const authorRelResult = await session.run(
         `MATCH (b:Book {id: $bookId})
@@ -178,7 +178,7 @@ export const connectBookRelationships = async (req, res) => {
         { bookId, actualAuthor }
       );
       
-      // 4. Nối Book với Category qua quan hệ BELONGS_TO
+      // 4. Nối Book với Category
       console.log("[LOG] 4. Tạo quan hệ Book-Category...");
       const categoryRelResult = await session.run(
         `MATCH (b:Book {id: $bookId})

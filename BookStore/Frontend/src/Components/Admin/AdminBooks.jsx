@@ -92,40 +92,31 @@ const AdminBooks = () => {
         fetchBooks();
         resetForm();
       } else {
-        // BƯỚC 1: Thêm sách mới vào Neo4j và log chi tiết hơn
-        console.log("🔄 BƯỚC 1: Thêm sách mới", {
-          tên: updatedData.name,
-          tácGiả: updatedData.author,
-          thểLoại: updatedData.category
-        });
-        
+        // BƯỚC 1: Thêm sách mới vào Neo4j
         const addResponse = await axios.post(`${API_URL}/book/add`, updatedData);
-        
         if (!addResponse.data.success) {
           throw new Error(`⛔ Thêm sách thất bại: ${addResponse.data.message}`);
         }
-        
         const newBookId = addResponse.data.data.id;
-        console.log(`✅ Sách đã được thêm thành công với ID: ${newBookId}`);
-        
-        // BƯỚC 2: Tạo quan hệ với tác giả và thể loại
-        console.log(`🔄 BƯỚC 2: Tạo quan hệ cho sách ID=${newBookId}`);
+
+        // BƯỚC 2: Luôn truyền author và category vừa nhập (có thể là mới)
         const connectData = {
           bookId: newBookId,
-          author: updatedData.author,
-          category: updatedData.category
+          author: updatedData.author?.trim() || 'Unknown Author',
+          category: updatedData.category?.trim() || 'General'
         };
-        
-        // Thiết lập timeout dài hơn để tránh lỗi mạng 
+
         const relationshipResponse = await axios.post(
-          `${API_URL}/admin/connect-book-relationships`, 
+          `${API_URL}/admin/connect-book-relationships`,
           connectData,
-          { timeout: 10000 } // Tăng timeout lên 10 giây
+          { timeout: 10000 }
         );
-        
-        console.log("✅ Kết quả tạo quan hệ:", relationshipResponse.data);
-        
-        toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
+
+        if (!relationshipResponse.data.success) {
+          toast.error(`Sách đã được thêm nhưng không thể liên kết: ${relationshipResponse.data.message}`);
+        } else {
+          toast.success('Thêm sách mới thành công và đã liên kết với tác giả và thể loại');
+        }
         fetchBooks();
         resetForm();
       }
